@@ -1,0 +1,88 @@
+defaults:
+  # Description of all usable components
+  state-components: []
+  # The result form that is edited
+  form: {}
+
+imports:
+  - blender: 'blender/buildin/meta-helper'
+
+translation-en:
+  - Zurück: Back
+  - Rückgängig: Revert
+  - Speichern: Save
+  - Bearbeiten: Edit
+
+body:
+  - + row: root
+    content:
+    - + div: left column
+      grid: col-sm-6
+      content:
+
+      # Dialog
+      - + dialog: component selector
+        path-reference: state-dialog
+        content:
+        - + button: add component
+          $repeat: get('state-components')
+          $label: blender.renderComponentName(context)
+          $on-click: get('state-tree').add(blender.initComponent(context))
+
+      # Navigation
+      - + group: when navigation is shown
+        $if: !get('state-selected')
+        content:
+        - + navigation-bar:
+          content-left:
+          - + button: Bearbeiten
+            $if: get('state-highlighted')
+            $on-click: set('state-selected', get('state-highlighted'))
+          - + button: Hinzufügen
+            $on-click: get('state-dialog').show()
+          content-right:
+          - + button: Speichern
+        - + tree-view:
+          path-reference: state-tree
+          path-value: form
+          path-highlight: state-highlighted
+          $label: (e) => blender.renderLabel(e, get('state-components'))
+          actions:
+            - label: Bearbeiten
+              $on-click: (e) => set('state-selected', e)
+
+      # Configuration
+      - + group: when component is configured
+        $if: get('state-selected')
+        content:
+        - + navigation-bar:
+          content-left:
+          - + button: Zurück
+            $onClick: |
+              () => {
+                set('state-highlighted', get('state-selected'));
+                set('state-selected', null);
+              }
+        - + embedded-form: configuration form
+          path-value: state-selected
+          $form: |
+            blender.getEditor(get('state-selected'), get('state-components'))
+
+    - + div: right column
+      grid: col-sm-6
+      content:
+      - + embedded-form: preview form
+        $components: blender.getComponents(get('state-components'))
+        path-value: state-preview
+        $form: get('form')
+
+# All inputs and outputs have to have default values
+# $value: get('out-form')
+# $set-value: (x) => set('out-form', x)
+
+
+# Input
+# form-preview
+# button
+# react Bootstrap 3
+# tree view
