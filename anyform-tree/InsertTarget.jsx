@@ -7,9 +7,8 @@ import {
   ConnectDropTarget,
 } from "react-dnd";
 
-import { TreeNode, TreeNodeID, MoveTreeNode } from "./react-dnd-treeview.d.ts";
 import { TYPE, DraggedNode } from "./DraggedNode";
-import { Styles } from "./InsertTarget.styles.ts";
+import { Styles } from "./InsertTarget.styles.js";
 
 const TreeViewInsertTarget = (props) =>
   props.connectDropTarget(

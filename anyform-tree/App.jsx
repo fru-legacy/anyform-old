@@ -4,7 +4,7 @@ import { DragDropContext, Backend as DragDropBackend } from "react-dnd";
 import HTML5DragDropBackend from "react-dnd-html5-backend";
 const TouchDragDropBackend = require("react-dnd-touch-backend").default;
 
-import { TreeNode, TreeNodeList, TreeNodeID, TreeView, MoveTreeNodeArgs } from "react-dnd-treeview";
+import { TreeView } from "./TreeView";
 
 const styles = require("./index.scss");
 
@@ -37,8 +37,6 @@ const recursivelyUpdateList = (
   }
   return listUpdateFunc(list, parentNode);
 };
-
-
 
 export class App extends Component {
   constructor() {
@@ -121,67 +119,67 @@ export class App extends Component {
         ]),
       },
     };
-  }
 
-  handleMoveNode = (args) => {
-    this.setState(Object.assign({}, this.state, {
-      rootNodes: recursivelyUpdateList(
-        this.state.rootNodes,
-        null,
-        (list, parentNode) =>
-          parentNode === args.newParentNode && parentNode === args.oldParentNode
-            ? Object.assign({}, list, {
-              items:
-              list.items
-                .insert(args.newParentChildIndex, args.node)
-                .remove(args.oldParentChildIndex + (args.newParentChildIndex < args.oldParentChildIndex ? 1 : 0))
-            })
-            : parentNode === args.newParentNode
-              ? Object.assign({}, list, {
-                items: list.items.insert(args.newParentChildIndex, args.node)
-              })
-              : parentNode === args.oldParentNode
+    this.handleMoveNode = (args) => {
+        this.setState(Object.assign({}, this.state, {
+        rootNodes: recursivelyUpdateList(
+            this.state.rootNodes,
+            null,
+            (list, parentNode) =>
+            parentNode === args.newParentNode && parentNode === args.oldParentNode
                 ? Object.assign({}, list, {
-                  items: list.items.remove(args.oldParentChildIndex)
+                items:
+                list.items
+                    .insert(args.newParentChildIndex, args.node)
+                    .remove(args.oldParentChildIndex + (args.newParentChildIndex < args.oldParentChildIndex ? 1 : 0))
                 })
-                : list,
-        item => item
-      ),
-    }));
-  };
+                : parentNode === args.newParentNode
+                ? Object.assign({}, list, {
+                    items: list.items.insert(args.newParentChildIndex, args.node)
+                })
+                : parentNode === args.oldParentNode
+                    ? Object.assign({}, list, {
+                    items: list.items.remove(args.oldParentChildIndex)
+                    })
+                    : list,
+            item => item
+        ),
+        }));
+    };
 
-  setStateWithLog = (newState) => {
-    console.log("new state: ", newState);
-    this.setState(newState);
-  };
+    this.setStateWithLog = (newState) => {
+        console.log("new state: ", newState);
+        this.setState(newState);
+    };
 
-  handleToggleCollapse = (node) => {
-    this.setStateWithLog(Object.assign({}, this.state, {
-      rootNodes: recursivelyUpdateList(
-        this.state.rootNodes,
-        null,
-        (list, parentNode) => list,
-        item => item === node ? Object.assign({}, item, {
-          isCollapsed: !item.isCollapsed,
-        }) : item
-      ),
-    }));
-  };
+    this.handleToggleCollapse = (node) => {
+        this.setStateWithLog(Object.assign({}, this.state, {
+        rootNodes: recursivelyUpdateList(
+            this.state.rootNodes,
+            null,
+            (list, parentNode) => list,
+            item => item === node ? Object.assign({}, item, {
+            isCollapsed: !item.isCollapsed,
+            }) : item
+        ),
+        }));
+    };
 
-  renderNode = (node) => (
-    <div className={ styles.nodeItem }>
-      { !node.children || node.children.items.isEmpty()
-        ? null
-        : <a
-          style={{ fontSize: "0.5em", verticalAlign: "middle" }}
-          onClick={ () => this.handleToggleCollapse(node) }
-          >
-          {node.isCollapsed ? "⊕" : "⊖"}
-        </a>
-      }
-      Node: { node.title }
-    </div>
-  );
+    this.renderNode = (node) => (
+        <div className={ 'nodeItem' }>
+        { !node.children || node.children.items.isEmpty()
+            ? null
+            : <a
+            style={{ fontSize: "0.5em", verticalAlign: "middle" }}
+            onClick={ () => this.handleToggleCollapse(node) }
+            >
+            {node.isCollapsed ? "⊕" : "⊖"}
+            </a>
+        }
+        Node: { node.title }
+        </div>
+    );
+  }
 
   render() {
     return (
@@ -199,3 +197,8 @@ export const DraggableApp = DragDropContext(
   HTML5DragDropBackend
   // TouchDragDropBackend({ enableMouseEvents: true })
 )(App);
+
+
+import ReactDOM from "react-dom";
+
+ReactDOM.render(<DraggableApp />, document.getElementById("root"));

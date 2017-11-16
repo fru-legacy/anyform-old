@@ -9,7 +9,6 @@ import {
   ConnectDragSource,
 } from "react-dnd";
 
-import { TreeNode, TreeNodeID, TreeNodeList, MoveTreeNode, TreeViewClassNames } from "./react-dnd-treeview.d.ts";
 import { DraggedNode, TYPE } from "./DraggedNode";
 import { DroppableTreeViewInsertTarget } from "./InsertTarget";
 
@@ -18,8 +17,8 @@ const TreeViewItem =
     props.connectDragSource(
       <div
         className={
-          classnames(props.classNames.node, {
-            [props.classNames.nodeDragging]: props.isDragging,
+          classnames('node', {
+            ['nodeDragging']: props.isDragging,
           }) }
         key={ props.node.id }
         >
@@ -30,7 +29,7 @@ const TreeViewItem =
           props.node.isCollapsed
             ? null
             :
-            <div className={ props.classNames.nodeChildren }>
+            <div className={ 'nodeChildren' }>
               { props.node.children && !props.node.children.items.isEmpty()
                 ? <TreeViewItemList
                   parentNode={ props.node }
@@ -89,13 +88,13 @@ const nodesWithPredecessors = (nodes) =>
 // }
 
 export const TreeViewItemList = (props) => (
-  <div className={ props.classNames.nodeList }>
+  <div className={ 'nodeList' }>
     {
       nodesWithPredecessors(props.nodes.items).map((node, index) =>
         <div
           key={ node.node.id }
           style={ { position: "relative" } }
-          className={ props.classNames.nodePositioningWrapper }
+          className={ 'nodePositioningWrapper' }
           >
           {
             index === 0

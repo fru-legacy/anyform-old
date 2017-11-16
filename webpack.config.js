@@ -27,7 +27,10 @@ const config = {
       {
         test: /(\.jsx|\.js)$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        query: {
+          presets: ['es2015', 'react']
+        }
       },
       {
         test: /\.scss$/,
@@ -54,7 +57,7 @@ const config = {
       path.resolve('./anyform-tree/node_modules'),
       'node_modules'
     ],
-    extensions: ['.js']
+    extensions: ['.js', '.jsx']
   },
   plugins: [
     css
