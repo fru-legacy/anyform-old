@@ -3,31 +3,24 @@
 const webpack = require('webpack');
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 const path = require('path');
-const env = require('yargs').argv.env;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const name = 'anyform';
+const folder = require('yargs').argv.folder || 'example';
+const isBuild = require('yargs').argv.env === 'build';
+const isLibrary = folder !== 'example';
 
-const extractSass = new ExtractTextPlugin({
-  filename: name + '.css',
-  disable: env !== 'build'
+const css = new ExtractTextPlugin({
+  filename: 'index.min.css',
+  disable: isBuild
 });
-const plugins = [extractSass];
-
-const filename = name + (env === 'build' ? '.min.js' : '.js');
-if (env === 'build') {
-  plugins.push(new UglifyJsPlugin({ minimize: true }));
-}
 
 const config = {
-  entry: __dirname + '/src/index.js',
+  entry: __dirname + '/' + folder + '/index.js',
   devtool: 'source-map',
   output: {
-    path: __dirname + '/lib',
-    filename: filename,
-    library: name,
-    libraryTarget: 'umd',
-    umdNamedDefine: true
+    path: __dirname + '/' + folder + '/dist',
+    filename: 'index.min.js',
+    publicPath: '/dist'
   },
   module: {
     rules: [
@@ -37,13 +30,8 @@ const config = {
         exclude: /node_modules/
       },
       {
-        test: /(\.jsx|\.js)$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/
-      },
-      {
         test: /\.scss$/,
-        use: extractSass.extract({
+        use: css.extract({
           use: [{
             loader: 'css-loader'
           },{
@@ -55,16 +43,36 @@ const config = {
     ]
   },
   resolve: {
-    modules: [path.resolve('./node_modules'), path.resolve('./src')],
-    extensions: ['.json', '.js']
+    modules: [path.resolve('./'), 'node_modules'],
+    extensions: ['.js']
   },
-  externals: {
+  plugins: [
+    css,
+    new UglifyJsPlugin({ minimize: isBuild })
+  ],
+  devServer: {
+    port: 3000,
+    hot: true,
+    historyApiFallback: {
+      index: './example/index.html'
+    }
+  }
+};
+
+if (isLibrary) {
+  config.output.library = folder + '.min.js';
+  config.output.libraryTarget = 'umd';
+  config.output.umdNamedDefine = true;
+  config.externals = {
     'react': 'react',
     'react-dnd': 'react-dnd',
     'immutable': 'immutable',
     'classnames': 'classnames'
-  },
-  plugins: plugins
-};
+  };
+} else {
+  config.resolve.alias = { 
+    'anyform-core': path.resolve('./anyform-core')
+  }
+}
 
 module.exports = config;
