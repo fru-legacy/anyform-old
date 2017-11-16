@@ -1,0 +1,24 @@
+{
+    "name": "anyform-core",
+    "version": "0.0.2",
+    "description": "Make any form - easily",
+    "main": "dist/index.min.js",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/fru/anyform.git"
+    },
+    "keywords": [
+      "form",
+      "builder",
+      "react",
+      "jquery",
+      "angular"
+    ],
+    "author": "Florian Rüberg",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/fru/anyform/issues"
+    },
+    "homepage": "https://github.com/fru/anyform"
+  }
+  

@@ -39,6 +39,10 @@ const config = {
           }],
           fallback: 'style-loader'
         })
+      },
+      {
+        test: /\.yaml$/,
+        loaders: ['json-loader', 'yaml-loader'],
       }
     ]
   },
@@ -47,17 +51,20 @@ const config = {
     extensions: ['.js']
   },
   plugins: [
-    css,
-    new UglifyJsPlugin({ minimize: isBuild })
+    css
   ],
   devServer: {
-    port: 3000,
+    port: 3001,
     hot: true,
     historyApiFallback: {
       index: './example/index.html'
     }
   }
 };
+
+if (isBuild) {
+  config.plugins.push(new UglifyJsPlugin({ minimize: true }));
+}
 
 if (isLibrary) {
   config.output.library = folder + '.min.js';
@@ -71,7 +78,8 @@ if (isLibrary) {
   };
 } else {
   config.resolve.alias = { 
-    'anyform-core': path.resolve('./anyform-core')
+    'anyform-core': path.resolve('./anyform-core'),
+    'anyform-default': path.resolve('./anyform-default')
   }
 }
 

@@ -2,10 +2,10 @@ defaults:
   # Description of all usable components
   state-components: []
   # The result form that is edited
-  form: {}
+  edited-form: {}
 
 imports:
-  - blender: 'blender/buildin/meta-helper'
+  - anyform: 'anyform-core/helper/index.js'
 
 translation-en:
   - Zurück: Back
@@ -31,7 +31,7 @@ body:
 
       # Navigation
       - + group: when navigation is shown
-        $if: !get('state-selected')
+        $if: "!get('state-selected')"
         content:
         - + navigation-bar:
           content-left:
@@ -44,7 +44,7 @@ body:
           - + button: Speichern
         - + tree-view:
           path-reference: state-tree
-          path-value: form
+          path-value: edited-form
           path-highlight: state-highlighted
           $label: (e) => blender.renderLabel(e, get('state-components'))
           actions:
@@ -74,15 +74,4 @@ body:
       - + embedded-form: preview form
         $components: blender.getComponents(get('state-components'))
         path-value: state-preview
-        $form: get('form')
-
-# All inputs and outputs have to have default values
-# $value: get('out-form')
-# $set-value: (x) => set('out-form', x)
-
-
-# Input
-# form-preview
-# button
-# react Bootstrap 3
-# tree view
+        path-form: edited-form

@@ -1,0 +1,47 @@
+{
+  "name": "anyform-default",
+  "version": "0.0.2",
+  "description": "Make any form - easily",
+  "main": "dist/index.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fru/anyform.git"
+  },
+  "keywords": [
+    "form",
+    "builder",
+    "react",
+    "jquery",
+    "angular"
+  ],
+  "dependencies": {
+    "autosize": "^3.0.20",
+    "bootstrap": "^3.3.7",
+    "desandro-matches-selector": "^2.0.1",
+    "es5-shim": "^4.5.9",
+    "eventie": "^1.0.6",
+    "get-size": "^2.0.2",
+    "imagesloaded": "3.1.8",
+    "jquery": "^3.2.1",
+    "jquery-form": "^3.50.0",
+    "jquery-placeholder": "^2.3.1",
+    "jquery-validation": "^1.16.0",
+    "jquery.inputmask": "^3.3.4",
+    "masonry-layout": "3.2.3",
+    "microplugin": "^0.0.3",
+    "moment": "^2.17.1",
+    "outlayer": "^2.1.0",
+    "pikaday": "1.5.1",
+    "selectize": "^0.12.4",
+    "sifter": "^0.5.2",
+    "spin.js": "^2.3.2",
+    "webui-popover": "^1.2.17",
+    "wolfy87-eventemitter": "^5.1.0"
+  },
+  "author": "Florian Rüberg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fru/anyform/issues"
+  },
+  "homepage": "https://github.com/fru/anyform"
+}

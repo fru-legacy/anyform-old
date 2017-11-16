@@ -1,6 +1,6 @@
 {
-  "name": "anyform",
-  "version": "0.0.1",
+  "name": "anyform-repository",
+  "version": "0.0.0",
   "description": "Make any form - easily",
   "main": "lib/anyform.js",
   "scripts": {
@@ -22,12 +22,14 @@
     "eslint-loader": "1.9.0",
     "eslint-plugin-react": "^7.4.0",
     "extract-text-webpack-plugin": "^3.0.2",
+    "json-loader": "^0.5.7",
     "mocha": "4.0.1",
     "node-sass": "^4.6.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
     "webpack": "3.8.1",
     "webpack-dev-server": "^2.9.4",
+    "yaml-loader": "^0.5.0",
     "yargs": "10.0.3"
   },
   "repository": {

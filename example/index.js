@@ -1,0 +1,1 @@
+console.log(require('anyform-default/generator.yaml'));
