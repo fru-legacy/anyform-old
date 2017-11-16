@@ -11,21 +11,7 @@ import { TreeNode, TreeNodeID, MoveTreeNode } from "./react-dnd-treeview.d.ts";
 import { TYPE, DraggedNode } from "./DraggedNode";
 import { Styles } from "./InsertTarget.styles.ts";
 
-export interface TreeViewInsertTargetProps {
-  readonly parentNode: TreeNode;
-  readonly parentChildIndex: number;
-  readonly precedingNode: TreeNode;
-  readonly insertBefore: boolean;
-  readonly onMoveNode: MoveTreeNode;
-}
-
-interface TreeViewInsertTargetDropProps {
-  readonly connectDropTarget: ConnectDropTarget;
-  readonly canDrop: boolean;
-  readonly isDropping: boolean;
-}
-
-const TreeViewInsertTarget = (props: TreeViewInsertTargetProps & TreeViewInsertTargetDropProps) =>
+const TreeViewInsertTarget = (props) =>
   props.connectDropTarget(
     <div
       style={
@@ -41,11 +27,7 @@ const TreeViewInsertTarget = (props: TreeViewInsertTargetProps & TreeViewInsertT
     </div>
   );
 
-const handleCanDrop = (
-  props: TreeViewInsertTargetProps,
-  monitor: DropTargetMonitor,
-  item: DraggedNode
-) => (
+const handleCanDrop = (props, monitor, item) => (
     !(
       props.parentNode === item.parentNode &&
       (
@@ -56,12 +38,7 @@ const handleCanDrop = (
     !item.allSourceIDs.contains(props.parentNode ? props.parentNode.id : null)
   );
 
-const handleDrop = (
-  props: TreeViewInsertTargetProps,
-  monitor: DropTargetMonitor,
-  component: React.Component<TreeViewInsertTargetProps, any>,
-  item: DraggedNode
-) => (
+const handleDrop = (props, monitor, component, item) => (
     props.onMoveNode({
       oldParentNode: item.parentNode,
       oldParentChildIndex: item.parentChildIndex,
@@ -77,19 +54,18 @@ const handleDrop = (
     })
   );
 
-const nodeTarget: DropTargetSpec<TreeViewInsertTargetProps> = {
+const nodeTarget = {
   drop: (props, monitor, component) => monitor.didDrop()
     ? undefined // some child already handled drop
-    : handleDrop(props, monitor, component, monitor.getItem() as DraggedNode),
-  canDrop: (props, monitor) => handleCanDrop(props, monitor, monitor.getItem() as DraggedNode),
+    : handleDrop(props, monitor, component, monitor.getItem()),
+  canDrop: (props, monitor) => handleCanDrop(props, monitor, monitor.getItem()),
 };
 
-const collectNodeDropProps =
-  (connect: DropTargetConnector, monitor: DropTargetMonitor): TreeViewInsertTargetDropProps => ({
+const collectNodeDropProps = (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     canDrop: monitor.canDrop(),
     isDropping: monitor.isOver({ shallow: true }) && monitor.canDrop(),
   });
 
-export const DroppableTreeViewInsertTarget: React.ComponentClass<TreeViewInsertTargetProps> =
+export const DroppableTreeViewInsertTarget =
   DropTarget([TYPE], nodeTarget, collectNodeDropProps)(TreeViewInsertTarget);
