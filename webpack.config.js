@@ -47,7 +47,13 @@ const config = {
     ]
   },
   resolve: {
-    modules: [path.resolve('./'), 'node_modules'],
+    modules: [
+      path.resolve('./'),
+      path.resolve('./anyform-core/node_modules'),
+      path.resolve('./anyform-default/node_modules'),
+      path.resolve('./anyform-tree/node_modules'),
+      'node_modules'
+    ],
     extensions: ['.js']
   },
   plugins: [
