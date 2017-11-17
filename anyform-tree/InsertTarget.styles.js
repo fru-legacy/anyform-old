@@ -4,16 +4,16 @@ const NormalStyles = {
   insertTarget: {
     boxSizing: "border-box",
     width: "100%",
-    height: "1em",
+    height: "0.2em",
     position: "absolute",
     zIndex: 1,
     display: "none",
   },
   insertBeforeTarget: {
-    top: "-0.5em",
+    top: "-0.1em",
   },
   insertAfterTarget: {
-    bottom: "-0.5em",
+    bottom: "-0.1em",
   },
   insertTargetCanDrop: {
     display: "flex",

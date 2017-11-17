@@ -1,6 +1,41 @@
 
 
 :global {
+  $target-height: 30px;
+  .anyform-tree-insert-target {
+
+    box-sizing: border-box;
+    width: 100%;
+    height: 0;
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    border: 1px solid grey;
+
+    &.show {
+      height: $target-height;
+
+      bottom: -$target-height / 2;
+      &.insertBefore {
+        top: -$target-height / 2;
+        bottom: auto;
+      }
+    }
+  
+    &.hovering {
+      .marker {
+        box-sizing: border-box;
+        width: 100%;
+        height: 3px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, gray, white);
+        align-self: center;
+      }
+    }
+  }
+}
+
+:global {
   .treeView {
     font-family: Verdana;
     border-right: 1px solid gray;
