@@ -1,7 +1,5 @@
 defaults:
-  # Description of all usable components
-  state-components: []
-  # The result form that is edited
+  components: [] # All usable components
   edited-form: {}
 
 imports:
@@ -13,65 +11,67 @@ translation-en:
   - Speichern: Save
   - Bearbeiten: Edit
 
-body:
+define-add-component-dialog:
+  - + dialog: component selector
+    path-reference: dialog
+    content:
+      - + button: add component
+        path-repeat: components
+        $label: anyform.renderComponentName(context)
+        $on-click: get('tree').add(anyform.initComponent(context))
+
+define-form-hierarchy: 
+  - + group: when hierarchy is shown
+    path-if: not selected
+    content:
+      - + navigation-bar:
+        content-left:
+          - + button: Hinzufügen
+            $on-click: get('dialog').show()
+          - + button: Bearbeiten
+            path-if: highlighted
+            $on-click: set('selected', get('highlighted'))
+        content-right:
+          - + button: Speichern
+      - + tree-view:
+        path-reference: tree
+        path-value: edited-form
+        path-highlight: highlighted
+        $label: (e) => anyform.renderLabel(e, get('components'))
+        actions:
+          - label: Bearbeiten
+            $on-click: (e) => set('selected', e)
+
+define-configure-component:
+  - + group: when component is configured
+    path-if: selected
+    content:
+      - + navigation-bar:
+        content-left:
+          - + button: Zurück
+            $onClick: |
+              () => {
+                set('highlighted', get('selected'));
+                set('selected', null);
+              }
+      - + embedded-form: configuration form
+        path-value: selected
+        $form: |
+          anyform.getEditor(get('selected'), get('components'))
+
+entry:
   - + row: root
     content:
     - + div: left column
       grid: col-sm-6
       content:
-
-      # Dialog
-      - + dialog: component selector
-        path-reference: state-dialog
-        content:
-        - + button: add component
-          $repeat: get('state-components')
-          $label: blender.renderComponentName(context)
-          $on-click: get('state-tree').add(blender.initComponent(context))
-
-      # Navigation
-      - + group: when navigation is shown
-        $if: "!get('state-selected')"
-        content:
-        - + navigation-bar:
-          content-left:
-          - + button: Bearbeiten
-            $if: get('state-highlighted')
-            $on-click: set('state-selected', get('state-highlighted'))
-          - + button: Hinzufügen
-            $on-click: get('state-dialog').show()
-          content-right:
-          - + button: Speichern
-        - + tree-view:
-          path-reference: state-tree
-          path-value: edited-form
-          path-highlight: state-highlighted
-          $label: (e) => blender.renderLabel(e, get('state-components'))
-          actions:
-            - label: Bearbeiten
-              $on-click: (e) => set('state-selected', e)
-
-      # Configuration
-      - + group: when component is configured
-        $if: get('state-selected')
-        content:
-        - + navigation-bar:
-          content-left:
-          - + button: Zurück
-            $onClick: |
-              () => {
-                set('state-highlighted', get('state-selected'));
-                set('state-selected', null);
-              }
-        - + embedded-form: configuration form
-          path-value: state-selected
-          $form: |
-            blender.getEditor(get('state-selected'), get('state-components'))
-
+        - include-add-component-dialog: {}
+        - include-form-hierarchy: {}
+        - include-configure-component: {}
     - + div: right column
       grid: col-sm-6
       content:
-      - + embedded-form: preview form
-        $components: blender.getComponents(get('state-components'))
-        path-value: state-preview
-        path-form: edited-form
+        - + embedded-form: preview form
+          $components: anyform.getComponents(get('components'))
+          path-value: preview
+          path-form: edited-form
