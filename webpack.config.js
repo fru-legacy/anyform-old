@@ -21,7 +21,7 @@ const config = {
   output: {
     path: __dirname + '/' + folder + '/dist',
     filename: 'index.min.js',
-    publicPath: 'anyform/docs/dist'
+    publicPath: 'anyform/dist'
   },
   module: {
     rules: [
