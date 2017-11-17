@@ -5,8 +5,9 @@ const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const folder = require('yargs').argv.env.folder || 'docs';
-const isBuild = require('yargs').argv.env.env === 'build';
+const env = require('yargs').argv.env || {};
+const folder = env.folder || 'docs';
+const isBuild = env.env === 'build';
 const isLibrary = folder !== 'docs';
 
 const css = new ExtractTextPlugin({
@@ -20,7 +21,7 @@ const config = {
   output: {
     path: __dirname + '/' + folder + '/dist',
     filename: 'index.min.js',
-    publicPath: '/dist'
+    publicPath: 'anyform/docs/dist'
   },
   module: {
     rules: [
