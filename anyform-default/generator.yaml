@@ -35,8 +35,8 @@ define-form-hierarchy:
           - + button: Speichern
       - + tree-view:
         path-reference: tree
-        path-value: edited-form
-        path-highlight: highlighted
+        bind-value: edited-form
+        bind-highlight: highlighted
         $label: (e) => anyform.renderLabel(e, get('components'))
         actions:
           - label: Bearbeiten
@@ -55,7 +55,7 @@ define-configure-component:
                 set('selected', null);
               }
       - + embedded-form: configuration form
-        path-value: selected
+        bind-value: selected
         $form: |
           anyform.getEditor(get('selected'), get('components'))
 
@@ -73,5 +73,5 @@ entry:
       content:
         - + embedded-form: preview form
           $components: anyform.getComponents(get('components'))
-          path-value: preview
+          bind-value: preview
           path-form: edited-form
