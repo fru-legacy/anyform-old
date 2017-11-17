@@ -5,9 +5,8 @@
   "main": "lib/anyform.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --progress --hot --watch --open",
-    "publish-example": "gh-pages-deploy",
-    "private-example-build": "webpack --env.env build --env.folder example",
-    "private-example-clean": "rimraf ./example/dist",
+    "build": "npm run build-example",
+    "build-example": "webpack --env.env build --env.folder example",
     "test": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
   },
@@ -26,7 +25,6 @@
     "eslint-loader": "1.9.0",
     "eslint-plugin-react": "^7.4.0",
     "extract-text-webpack-plugin": "^3.0.2",
-    "gh-pages-deploy": "^0.4.2",
     "json-loader": "^0.5.7",
     "mocha": "4.0.1",
     "node-sass": "^4.6.1",
@@ -58,14 +56,5 @@
     "immutable": "^3.8.2",
     "react": "^16.1.1",
     "react-dom": "^16.1.1"
-  },
-  "gh-pages-deploy": {
-    "staticpath": "example/dist",
-    "prep": [
-      "private-example-build"
-    ],
-    "post": [
-      "private-example-clean"
-    ]
   }
 }
