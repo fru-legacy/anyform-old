@@ -1,5 +1,7 @@
 
-.treeView {
+
+:global {
+  .treeView {
     font-family: Verdana;
     border-right: 1px solid gray;
     border-bottom: 1px solid gray;
@@ -28,4 +30,5 @@
   
   .nodeChildren {
     padding-left: 2em;
-  }  
+  }
+}
