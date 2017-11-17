@@ -5,8 +5,9 @@
   "main": "lib/anyform.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --progress --hot --watch --open",
-    "publish:example": "gh-pages-deploy",
-    "build": "webpack --env build",
+    "publish-example": "gh-pages-deploy",
+    "private-example-build": "webpack --env build --folder example",
+    "private-example-clean": "rimraf ./example/dist",
     "test": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
   },
@@ -57,5 +58,15 @@
     "immutable": "^3.8.2",
     "react": "^16.1.1",
     "react-dom": "^16.1.1"
+  },
+  "gh-pages-deploy": {
+    "staticpath": "example/dist",
+    "prep": [
+      "private-example-build"
+    ],
+    "post": [
+      "private-example-clean"
+    ],
+    "noprompt": true
   }
 }
