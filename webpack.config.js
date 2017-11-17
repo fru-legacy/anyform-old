@@ -5,9 +5,9 @@ const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const folder = require('yargs').argv.env.folder || 'example';
+const folder = require('yargs').argv.env.folder || 'docs';
 const isBuild = require('yargs').argv.env.env === 'build';
-const isLibrary = folder !== 'example';
+const isLibrary = folder !== 'docs';
 
 const css = new ExtractTextPlugin({
   filename: 'index.min.css',
@@ -66,7 +66,7 @@ const config = {
     port: 3001,
     hot: true,
     historyApiFallback: {
-      index: './example/index.html'
+      index: './docs/index.html'
     }
   }
 };

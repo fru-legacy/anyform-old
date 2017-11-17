@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --progress --hot --watch --open",
     "build": "npm run build-example",
-    "build-example": "webpack --env.env build --env.folder example",
+    "build-example": "webpack --env.env build --env.folder docs",
     "test": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
   },
