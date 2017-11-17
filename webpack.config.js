@@ -12,7 +12,7 @@ const isLibrary = folder !== 'docs';
 
 const css = new ExtractTextPlugin({
   filename: 'index.min.css',
-  disable: isBuild
+  disable: !isBuild
 });
 
 const config = {
@@ -30,7 +30,7 @@ const config = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         query: {
-          presets: ['es2015', 'react']
+          presets: ['es2015', 'react-plus']
         }
       },
       {

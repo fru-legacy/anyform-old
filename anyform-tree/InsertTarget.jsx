@@ -21,7 +21,6 @@ function canDrop(props, monitor) {
 }
 
 function drop(props, monitor, component) {
-  console.log(arguments);
   if (monitor.didDrop()) return; // A nested target already handled drop
 
   let item = monitor.getItem();
@@ -41,20 +40,21 @@ function drop(props, monitor, component) {
   };
 }
 
-function getTargetProps(connect, monitor) {
-  let c = {
-    connectDropTarget: connect.dropTarget(),
-    hovering: monitor.isOver() && monitor.canDrop(),
-    show: !!monitor.getItem()
-  };
-  return c;
-}
+const getTargetProps = (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  hovering: monitor.isOver() && monitor.canDrop(),
+  show: !!monitor.getItem()
+});
 
 @DropTarget([TYPE], {drop, canDrop}, getTargetProps)
-export function DroppableTreeViewInsertTarget({ connectDropTarget, hovering, show, insertBefore }) {
-  return connectDropTarget(
-    <div className={ cx('anyform-tree-insert-target', { hovering, show, insertBefore }) }>
-      <div className={ cx('marker') } />
-    </div>
-  );
+export class DroppableTreeViewInsertTarget extends React.Component {
+  render() {
+    const { hovering, show, insertBefore } = this.props;
+
+    return this.props.connectDropTarget(
+      <div className={ cx('anyform-tree-insert-target', { hovering, show, insertBefore }) }>
+        <div className={ cx('marker') } />
+      </div>
+    );
+  }
 }

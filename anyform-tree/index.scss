@@ -10,7 +10,6 @@
     position: absolute;
     z-index: 1;
     display: flex;
-    border: 1px solid grey;
 
     &.show {
       height: $target-height;
