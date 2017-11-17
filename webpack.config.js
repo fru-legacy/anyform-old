@@ -5,8 +5,8 @@ const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const folder = require('yargs').argv.folder || 'example';
-const isBuild = require('yargs').argv.env === 'build';
+const folder = require('yargs').argv.env.folder || 'example';
+const isBuild = require('yargs').argv.env.env === 'build';
 const isLibrary = folder !== 'example';
 
 const css = new ExtractTextPlugin({

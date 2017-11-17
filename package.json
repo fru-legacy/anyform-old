@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --progress --hot --watch --open",
     "publish-example": "gh-pages-deploy",
-    "private-example-build": "webpack --env build --folder example",
+    "private-example-build": "webpack --env.env build --env.folder example",
     "private-example-clean": "rimraf ./example/dist",
     "test": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
@@ -66,7 +66,6 @@
     ],
     "post": [
       "private-example-clean"
-    ],
-    "noprompt": true
+    ]
   }
 }
