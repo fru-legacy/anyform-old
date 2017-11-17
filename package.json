@@ -5,6 +5,7 @@
   "main": "lib/anyform.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --progress --hot --watch --open",
+    "publish:example": "gh-pages-deploy",
     "build": "webpack --env build",
     "test": "mocha --compilers js:babel-core/register --colors ./test/*.spec.js",
     "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js"
@@ -24,6 +25,7 @@
     "eslint-loader": "1.9.0",
     "eslint-plugin-react": "^7.4.0",
     "extract-text-webpack-plugin": "^3.0.2",
+    "gh-pages-deploy": "^0.4.2",
     "json-loader": "^0.5.7",
     "mocha": "4.0.1",
     "node-sass": "^4.6.1",
