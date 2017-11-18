@@ -43,7 +43,7 @@ function drop(props, monitor, component) {
 const getTargetProps = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   hovering: monitor.isOver() && monitor.canDrop(),
-  show: !!monitor.getItem()
+  show: !!monitor.getItem(),
 });
 
 @DropTarget([TYPE], {drop, canDrop}, getTargetProps)
@@ -51,7 +51,7 @@ export class DroppableTreeViewInsertTarget extends React.Component {
   render() {
     const { hovering, show, insertBefore } = this.props;
 
-    return this.props.connectDropTarget(
+    return show && this.props.connectDropTarget(
       <div className={ cx('anyform-tree-insert-target', { hovering, show, insertBefore }) }>
         <div className={ cx('marker') } />
       </div>

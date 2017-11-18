@@ -14,7 +14,7 @@ import { DroppableTreeViewInsertTarget } from "./InsertTarget";
 
 const TreeViewItem =
   (props) => (
-    props.connectDragSource(<div>
+    props.connectDragSource(
       <div
         className={
           classnames('node', {
@@ -22,11 +22,9 @@ const TreeViewItem =
           }) }
         key={ props.node.id }
         >
-        <div>
-          { props.renderNode(props.node) }
-        </div>
+        { props.renderNode(props.node) }
         {
-          props.node.isCollapsed
+          props.node.isCollapsed || !props.node.children || props.node.children.items.isEmpty()
             ? null
             :
             <div className={ 'nodeChildren' }>
@@ -47,7 +45,7 @@ const TreeViewItem =
                   /> }
             </div>
         }
-      </div></div>
+      </div>
     )
   );
 
