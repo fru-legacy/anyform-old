@@ -4,7 +4,7 @@
 
 import ReactDOM from "react-dom";
 import React from "react";
-import {Container} from 'anyform-tree';
+import {Tree} from 'anyform-tree';
 
-ReactDOM.render(<Container />, document.getElementById("root"));
+ReactDOM.render(<Tree />, document.getElementById("root"));
 
