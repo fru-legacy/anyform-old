@@ -1,0 +1,40 @@
+:global {
+
+    $vertical-spacing: 4px;
+    $target-overlay: 6px;
+
+    .anyform-tree {
+        .node {
+            border: 1px solid lightgrey;
+            margin-bottom: $vertical-spacing;
+        }
+        .contains {
+            margin-left: 20px;
+        }
+        .node-container {
+            position: relative;
+            .target {
+                height: 0;
+                overflow: hidden;
+                position: absolute;
+                width: 100%;
+
+                &.visible {
+                    //background-color: rgba(1,1,1,0.2);
+                    bottom: -($target-overlay + $vertical-spacing);
+                    height: 2 * $target-overlay + $vertical-spacing;
+                    &.top {
+                        top: -($target-overlay + $vertical-spacing);
+                        bottom: auto;
+                    }    
+                }
+                .preview {
+                    background-color: grey;
+                    height: $vertical-spacing;
+                    margin-top: $target-overlay;
+                }
+            }
+        }
+    }
+
+}

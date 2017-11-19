@@ -12,10 +12,9 @@ function drop(props, monitor) {
 class Target extends Component {
 
 	render() {
-		let { options, top, cx } = this.props;
-
-		let target = <div className={cx('node-target', {top})}>
-			<div className={cx('node-preview')}></div>
+		let { options, top, cx, isOver, visible } = this.props;
+		let target = <div className={cx('target', {top, visible})}>
+			{visible && isOver && <div className={cx('preview')}></div>}
 		</div>; 
 
 		return this.props.connectDropTarget(target);
@@ -27,11 +26,10 @@ export const NodeTarget = (props) => {
 
 	// Build drop parameter
 	// Use real targets
+	let visible = dragging && !isDragging && !isDraggingParent;
 
-	if (!dragging || isDragging || isDraggingParent) return <div></div>;
-
-	var top = <Target top={true} {...props} />;
-	var bottom = <Target {...props} />
+	var top = <Target top={true} {...props} visible={visible && dragging !== previous} />;
+	var bottom = <Target {...props} visible={visible && isLast} />
 	
-	return <div>{dragging !== previous && top}{isLast && bottom}</div>
+	return <div>{top}{bottom}</div>
 };
