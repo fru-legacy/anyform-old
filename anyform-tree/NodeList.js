@@ -3,7 +3,7 @@ import { DragSource } from 'react-dnd';
 
 import { NodeTarget } from './NodeTarget';
 
-const getSourceItem = (props) => ({current: props.current, path: props.path})
+const getSourceItem = (props) => ({item: props.current, path: props.path})
 
 @DragSource('anyform-tree', {beginDrag: getSourceItem}, (connect, monitor) => ({
 	connectDragSource: connect.dragSource(),
@@ -14,11 +14,11 @@ class NodeContainer extends Component {
 
 	renderChildGroup = ({id, value}) => {
 		if (!value) return null;
-		let { options, isDragging, isDraggingParent, cx, zIndex, key } = this.props;
+		let { current, options, isDragging, isDraggingParent, cx, zIndex, key } = this.props;
 
 		let label = options.containsLabel(id);
 		let path  = options.buildPath(this.props.path, id);
-		let props = {path, options, cx};
+		let props = {path, options, cx, parent: current};
 		
 		return <div className={cx('group')} key={id + key}>
 			{label && <div className={cx('group-label')}>{label}</div>}
@@ -28,7 +28,7 @@ class NodeContainer extends Component {
 	}
 
 	render() {
-		let { options, current, index, isDragging, cx, zIndex } = this.props;
+		let { options, current, index, isDragging, cx, zIndex, parent } = this.props;
 
 		let node = current && <div className={cx('node')}>{options.node(current, index)}</div>;
 		
@@ -42,7 +42,7 @@ class NodeContainer extends Component {
 	}
 }
 
-export const NodeList = ({list, isDragging, path, options, cx, zIndex}) => <div className={cx('list')}>{
+export const NodeList = ({list, isDragging, path, options, cx, zIndex, parent}) => <div className={cx('list')}>{
 	(list.length ? list : [null]).map((_, i) => <NodeContainer 
 		current  = {list[i]}
 		previous = {list[i - 1]}
@@ -53,6 +53,7 @@ export const NodeList = ({list, isDragging, path, options, cx, zIndex}) => <div 
 		path     = {options.buildPath(path, i)}
 		cx       = {cx}
 		zIndex   = {list.length - i}
+		parent   = {parent}
 		isDraggingParent = {isDragging}
 	/>)
 }</div>;

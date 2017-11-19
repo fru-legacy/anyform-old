@@ -1,7 +1,7 @@
 export default {
     TYPE: 'anyform-tree',
     drop: (props, monitor, component) => {},
-    buildPath: () => null,
+    buildPath: (path, id) => (path ? path + '.' : '') + id,
     node: (node) => node.title,
     id: (node) => node.id,
     containsLabel: (id) => null,

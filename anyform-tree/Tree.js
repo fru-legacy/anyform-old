@@ -16,7 +16,7 @@ export class Tree extends Component {
 		const options = settings;
 
 		return <div className={cx('anyform-tree')}>
-			<NodeList list={testdata} isDragging={false} path={null} options={options} cx={cx} zIndex={1} />
+			<NodeList list={testdata} isDragging={false} path={null} options={options} cx={cx} zIndex={1} parent={null} />
 		</div>
 	}
 }
