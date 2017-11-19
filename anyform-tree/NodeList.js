@@ -23,7 +23,7 @@ class NodeContainer extends Component {
 		return <div className={cx('group')} key={id + key}>
 			{label && <div className={cx('group-label')}>{label}</div>}
 			<NodeList list={value} {...props} 
-				isDragging={isDragging || isDraggingParent} zIndex={zIndex + 1}/>
+				isDragging={isDragging || isDraggingParent}/>
 		</div>;
 	}
 
@@ -34,7 +34,7 @@ class NodeContainer extends Component {
 		
 		return <div className={cx('node-container')} style={{zIndex}}>
 			{current && this.props.connectDragSource(node)}
-			{current && <div className={cx('contains')}>
+			{current && <div className={cx('contains')} style={{zIndex: 2}}>
 				{options.containsNormalized(current).map(this.renderChildGroup)}
 			</div>}
 			<NodeTarget {...this.props} />
@@ -52,7 +52,7 @@ export const NodeList = ({list, isDragging, path, options, cx, zIndex}) => <div 
 		options  = {options}
 		path     = {options.buildPath(path, i)}
 		cx       = {cx}
-		zIndex   = {zIndex}
+		zIndex   = {list.length - i}
 		isDraggingParent = {isDragging}
 	/>)
 }</div>;

@@ -31,5 +31,5 @@ export const NodeTarget = (props) => {
 	var top = <Target top={true} {...props} visible={visible && dragging !== previous} />;
 	var bottom = <Target {...props} visible={visible && isLast} />
 	
-	return <div>{top}{bottom}</div>
+	return <div style={{zIndex: 1}}>{top}{bottom}</div>
 };
