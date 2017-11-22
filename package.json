@@ -33,7 +33,9 @@
     "webpack": "3.8.1",
     "webpack-dev-server": "^2.9.4",
     "yaml-loader": "^0.5.0",
-    "yargs": "10.0.3"
+    "yargs": "10.0.3",
+    "selectize": "^0.12.4",
+    "react-selectize": "^3.0.1"
   },
   "repository": {
     "type": "git",
