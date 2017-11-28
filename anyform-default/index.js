@@ -1,4 +1,9 @@
-'./node_modules/es5-shim/es5-shim.js',
+export {Example} from './Example';
+require('./default.scss');
+
+
+
+/*'./node_modules/es5-shim/es5-shim.js',
 './node_modules/sifter/sifter.js',
 './node_modules/selectize/dist/js/standalone/selectize.js',
 './node_modules/microplugin/src/microplugin.js',
@@ -20,4 +25,4 @@
 <link rel="stylesheet" href="../node_modules/selectize/dist/css/selectize.bootstrap3.css">
 <link rel="stylesheet" href="../node_modules/pikaday/css/pikaday.css">
 <link rel="stylesheet" href="../node_modules/webui-popover/dist/jquery.webui-popover.css">
-<link rel="stylesheet" href="../app/styles/image-picker.css">
+<link rel="stylesheet" href="../app/styles/image-picker.css">*/

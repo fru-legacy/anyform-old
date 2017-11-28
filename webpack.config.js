@@ -35,12 +35,48 @@ const config = {
       },
       {
         test: /\.scss$/,
+        exclude: [/node_modules/],
         use: css.extract({
           use: [{
             loader: 'css-loader',
-            options: { modules: true }
+            options: { modules: false }
           },{
             loader: 'sass-loader'
+          }],
+          fallback: 'style-loader'
+        })
+      },
+      {
+        test: /\.scss$/,
+        include: [/node_modules/],
+        use: css.extract({
+          use: [{
+            loader: 'css-loader',
+            options: { modules: false }
+          },{
+            loader: 'sass-loader'
+          }],
+          fallback: 'style-loader'
+        })
+      },
+      {
+        test: /\.css$/,
+        exclude: [/node_modules/],
+        use: css.extract({
+          use: [{
+            loader: 'css-loader',
+            options: { modules: false }
+          }],
+          fallback: 'style-loader'
+        })
+      },
+      {
+        test: /\.css$/,
+        include: [/node_modules/],
+        use: css.extract({
+          use: [{
+            loader: 'css-loader',
+            options: { modules: false }
           }],
           fallback: 'style-loader'
         })
@@ -88,7 +124,7 @@ if (isLibrary) {
     'classnames': 'classnames'
   };
 } else {
-  config.resolve.alias = { 
+  config.resolve.alias = {
     'anyform-core': path.resolve('./anyform-core'),
     'anyform-default': path.resolve('./anyform-default')
   }

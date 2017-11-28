@@ -33,7 +33,9 @@
     "webpack": "3.8.1",
     "webpack-dev-server": "^2.9.4",
     "yaml-loader": "^0.5.0",
-    "yargs": "10.0.3"
+    "yargs": "10.0.3",
+    "selectize": "^0.12.4",
+    "react-selectize": "^3.0.1"
   },
   "repository": {
     "type": "git",
@@ -53,8 +55,11 @@
   },
   "homepage": "https://github.com/fru/anyform",
   "dependencies": {
+    "classnames": "^2.2.5",
     "immutable": "^3.8.2",
     "react": "^16.1.1",
+    "react-dnd": "^2.5.4",
+    "react-dnd-html5-backend": "^2.5.4",
     "react-dom": "^16.1.1"
   }
 }
