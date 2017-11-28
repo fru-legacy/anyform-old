@@ -1,0 +1,15 @@
+{
+  "defaults": {
+    "components": [],
+    "edited-form": {}
+  },
+  "imports": {
+    "anyform": "anyform-core/helper/index.js"
+  },
+  "translation-en": {
+    "Zurück": "Back",
+    "Rückgängig": "Revert",
+    "Speichern": "Save",
+    "Bearbeiten": "Edit"
+  }
+}

@@ -1,0 +1,54 @@
+<define name="add-component-dialog">
+  <dialog comment="component selector" reference="dialog">
+    <button repeat="components" context="context" onClick="get('tree').add(anyform.initComponent(context))">
+      {anyform.renderComponentName(context)}
+    </button>
+  </dialog>
+</define>
+
+<define name="form-hierarchy">
+  <if when="!selected" comment="when hierarchy is shown">
+    <navigation-bar>
+      <left>
+        <button onClick="get('dialog').show()">Hinzufügen</button>
+        <button onClick="set('selected', get('highlighted'))">Bearbeiten</button>
+      </left>
+      <right>
+        <button>Speichern</button>
+      </right>
+    </navigation-bar>
+    <tree-view reference="tree" value="edited-form" highlight="highlighted" context="e">
+      {anyform.renderLabel(e, get('components'))}
+      <button onClick="set('selected', e)">Bearbeiten</button>
+    </tree-view>
+  </if>
+</define>
+
+<define name="configure-component">
+  <if when="selected" comment="when component is configured">
+    <navigation-bar>
+      <left>
+        <button onClick="
+          () => {
+            set('highlighted', get('selected'));
+            set('selected', null);
+          }
+        ">Zurück</button>
+      </left>
+    </navigation-bar>
+    <embedded-form comment="configuration" value="selected" 
+      form="anyform.getEditor(get('selected'), get('components'))" />
+  </if>
+</define>
+
+<div class="row" comment="root">
+  <div class="col-sm-6">
+    <include name="add-component-dialog" />
+    <include name="form-hierarchy" />
+    <include name="configure-component" />
+  </div>
+  <div class="col-sm-6">
+    <embedded-form comment="preview" value="preview" form="edited-form"
+      components="anyform.getComponents(get('components'))" />
+  </div>
+</div>
