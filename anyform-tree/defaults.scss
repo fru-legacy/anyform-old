@@ -5,7 +5,7 @@
 
     .anyform-tree {
         .node {
-            border: 1px solid lightgrey;
+            border: 1px solid green;
             margin-bottom: $vertical-spacing;
         }
         .contains {
@@ -20,7 +20,7 @@
                 width: 100%;
 
                 &.visible {
-                    //background-color: rgba(1,1,1,0.2);
+                    background-color: rgba(1,1,1,0.15);
                     bottom: -($target-overlay + $vertical-spacing);
                     height: 2 * $target-overlay + $vertical-spacing;
                     &.top {
@@ -29,7 +29,7 @@
                     }    
                 }
                 .preview {
-                    background-color: grey;
+                    background-color: red;
                     height: $vertical-spacing;
                     margin-top: $target-overlay;
                 }
