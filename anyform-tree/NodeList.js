@@ -13,7 +13,6 @@ const getSourceItem = (props) => ({item: props.current, path: props.path})
 class NodeContainer extends Component {
 
 	renderChildGroup = ({id, value}) => {
-		if (!value) return null;
 		let { current, options, isDragging, isDraggingParent, cx, zIndex, key } = this.props;
 
 		let label = options.containsLabel(id);
@@ -42,18 +41,23 @@ class NodeContainer extends Component {
 	}
 }
 
-export const NodeList = ({list, isDragging, path, options, cx, zIndex, parent}) => <div className={cx('list')}>{
-	(list.length ? list : [null]).map((_, i) => <NodeContainer 
-		current  = {list[i]}
-		previous = {list[i - 1]}
-		key      = {options.id(list[i])}
-		index    = {i}
-		isLast   = {list.length === i + 1}
-		options  = {options}
-		path     = {options.buildPath(path, i)}
-		cx       = {cx}
-		zIndex   = {list.length - i}
-		parent   = {parent}
-		isDraggingParent = {isDragging}
-	/>)
-}</div>;
+export const NodeList = ({list, isDragging, path, options, cx, zIndex, parent}) => {
+	var original = list || [];
+	if (!list || !list.length) list = [null];
+
+	return <div className={cx('list')}>{
+		list.map((_, i) => <NodeContainer 
+			current  = {list[i]}
+			previous = {list[i - 1]}
+			key      = {options.id(list[i])}
+			index    = {i}
+			isLast   = {list.length === i + 1 && original.length > 0}
+			options  = {options}
+			path     = {options.buildPath(path, i)}
+			cx       = {cx}
+			zIndex   = {list.length - i}
+			parent   = {parent}
+			isDraggingParent = {isDragging}
+		/>)
+	}</div>;
+};

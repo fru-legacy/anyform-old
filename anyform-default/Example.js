@@ -26,7 +26,7 @@ var chartData = [];
 export class Example extends Component {
   constructor(props) {
     super(props);
-    this.state = { elements: [1,2,3], hasMore: true };
+    this.state = { elements: [1,2,3, 1,2,3, 1,2,3, 1,2,3], hasMore: true };
   }
 
 	render() {
@@ -55,7 +55,7 @@ export class Example extends Component {
 <MasonryInfiniteScroller hasMore={this.state.hasMore} loadMore={() => {}}>
     {
         this.state.elements.map((el, index) =>
-            <div key={index}>{el}</div>
+            <div key={index} style={{width: '120px'}}>{el}</div>
         )
     }
 </MasonryInfiniteScroller>
