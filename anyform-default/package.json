@@ -19,6 +19,7 @@
     "bootstrap": "^3.3.7",
     "chart.js": "^1.1.1",
     "desandro-matches-selector": "^2.0.1",
+    "elliptical": "^2.3.0",
     "em-react-spin": "git+https://git@github.com/EventMobi/em-react-spin.git",
     "envify": "^1.2.1",
     "es5-shim": "^4.5.9",

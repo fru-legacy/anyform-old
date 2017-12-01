@@ -1,4 +1,5 @@
 export {Example} from './Example';
+export {Natural} from './Natural';
 require('./default.scss');
 
 
