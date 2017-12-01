@@ -4,6 +4,27 @@ require('./default.scss');
 
 
 
+
+require('anyform-core');
+
+
+import {DomHandler, Parser, parseDOM} from 'htmlparser2';
+import serialize from 'dom-serializer';
+
+let rawHtml = "Xyz <script language= javascript>var foo = '<<bar>>';</  script><!--<!-- Waah! -- -->";
+
+let handler = new DomHandler(function (error, dom) {
+    if (error) console.log(error);
+    console.log(dom);
+    console.log(serialize(dom))
+});
+
+var parser = new Parser(handler);
+parser.write(rawHtml);
+parser.end();
+
+
+
 /*'./node_modules/es5-shim/es5-shim.js',
 './node_modules/sifter/sifter.js',
 './node_modules/selectize/dist/js/standalone/selectize.js',
