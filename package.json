@@ -56,10 +56,11 @@
   "homepage": "https://github.com/fru/anyform",
   "dependencies": {
     "classnames": "^2.2.5",
+    "em-react-spin": "git+https://git@github.com/EventMobi/em-react-spin.git",
     "immutable": "^3.8.2",
-    "react": "^16.1.1",
+    "react": "^16.2.0",
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
-    "react-dom": "^16.1.1"
+    "react-dom": "^16.2.0"
   }
 }
