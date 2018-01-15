@@ -18,11 +18,13 @@ class NodeContainer extends Component {
 		let label = options.containsLabel(id);
 		let path  = options.buildPath(this.props.path, id);
 		let props = {path, options, cx, parent: current};
-		
+
 		return <div className={cx('group')} key={id + key}>
-			{label && <div className={cx('group-label')}>{label}</div>}
-			<NodeList list={value} {...props} 
-				isDragging={isDragging || isDraggingParent}/>
+			<div className={cx('group-inner')}>
+				{label && <div className={cx('group-label')}>{label}</div>}
+				<NodeList list={value} {...props}
+					isDragging={isDragging || isDraggingParent}/>
+			</div>
 		</div>;
 	}
 
@@ -30,7 +32,7 @@ class NodeContainer extends Component {
 		let { options, current, index, isDragging, cx, zIndex, parent } = this.props;
 
 		let node = current && <div className={cx('node')}>{options.node(current, index)}</div>;
-		
+
 		return <div className={cx('node-container')} style={{zIndex}}>
 			{current && this.props.connectDragSource(node)}
 			{current && <div className={cx('contains')} style={{zIndex: 2}}>
@@ -46,7 +48,7 @@ export const NodeList = ({list, isDragging, path, options, cx, zIndex, parent}) 
 	if (!list || !list.length) list = [null];
 
 	return <div className={cx('list')}>{
-		list.map((_, i) => <NodeContainer 
+		list.map((_, i) => <NodeContainer
 			current  = {list[i]}
 			previous = {list[i - 1]}
 			key      = {options.id(list[i])}

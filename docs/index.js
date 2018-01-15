@@ -7,6 +7,6 @@ import React from "react";
 import {Tree} from 'anyform-tree';
 import {Example, Natural} from 'anyform-default';
 
-//ReactDOM.render(<Tree />, document.getElementById("root"));
+ReactDOM.render(<Tree />, document.getElementById("root"));
 //ReactDOM.render(<Example />, document.getElementById("root"));
-ReactDOM.render(<Natural />, document.getElementById("root"));
+//ReactDOM.render(<Natural />, document.getElementById("root"));

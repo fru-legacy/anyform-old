@@ -1,6 +1,59 @@
 :global {
 
     $vertical-spacing: 4px;
+    $target-overlay: 0px;
+
+    .anyform-tree {
+      .node {
+          border: 1px solid green;
+          margin-bottom: $vertical-spacing;
+      }
+
+      .node-container-inner {
+        position: relative;
+      }
+
+      .list-container {
+        margin-left: 20px;
+        margin-top: -( $vertical-spacing + $target-overlay);
+        padding-top: ( $vertical-spacing + $target-overlay);
+      }
+
+      .list-container-inner {
+        z-index: 3;
+        position: relative;
+      }
+
+      .target {
+          z-index: 2;
+          height: 0;
+          overflow: hidden;
+          position: absolute;
+          width: 100%;
+
+          &.visible {
+              background-color: rgba(1,1,1,0.15);
+              height: 2 * $target-overlay + $vertical-spacing;
+              &.top {
+                  top: -($target-overlay + $vertical-spacing);
+              }
+              &.bottom {
+                  bottom: -($target-overlay + $vertical-spacing);
+              }
+          }
+          .preview {
+              background-color: red;
+              height: $vertical-spacing;
+              margin-top: $target-overlay;
+          }
+      }
+    }
+}
+
+
+/*:global {
+
+    $vertical-spacing: 4px;
     $target-overlay: 6px;
 
     .anyform-tree {
@@ -26,7 +79,7 @@
                     &.top {
                         top: -($target-overlay + $vertical-spacing);
                         bottom: auto;
-                    }    
+                    }
                 }
                 .preview {
                     background-color: red;
@@ -36,5 +89,4 @@
             }
         }
     }
-
-}
+}*/
