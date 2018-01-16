@@ -23,16 +23,20 @@ export class Tree extends Component {
 	}
 }*/
 
-class NodeList extends Component {
-	render() {
-		return <div className={this.props.wrapper}>
-			{this.props.list  && this.props.list.map(x => <Node data={x} key={x.id} />)}
-			{!this.props.list && <Node data={null} />}
-		</div>;
-	}
+const NodeList = ({ list, parentDragging, options, path, wrapper }) => {
+
+	let context = { list, parentDragging, options, path };
+	let first = <Target {...context} index={0} />;
+
+	let content = (node, i) => <div key={node.id}>
+		<Node   {...context} index={i} />
+		<Target {...context} index={i+1} />
+	</div>
+
+	return <div className={wrapper}>{first}{list && list.map(content)}</div>;
 }
 
-const getSourceItem = (props) => ({item: props.current, path: props.path})
+const getSourceItem = ({ path, list, index }) => ({item: list[index], path})
 
 function drop(props, monitor) {
 	console.log(monitor.getItem());
@@ -42,59 +46,71 @@ function drop(props, monitor) {
 
 @DragSource('anyform-tree', {beginDrag: getSourceItem}, (connect, monitor) => ({
 	connectDragSource: connect.dragSource(),
-	isDragging: monitor.isDragging(),
-	dragging: monitor.getItem()
+	isDragging: monitor.isDragging()
 }))
 class Node extends Component {
 	render() {
-		const cx = classNames.bind(styles);
-		let { dragging } = this.props;
+		let { list, parentDragging, isDragging, options, index, path } = this.props;
+		let node = <div className={options.cx('node')}>{list[index].title}</div>;
 
-		if (!this.props.data) return <Target visible={dragging} />;
+		// TODO groups:
 
-		let node = <div className={cx('node')}>{this.props.data.title}</div>;
-
-		return <div className={cx('node-container')}>
-			<Target visible={dragging} />
-			<div className={cx('node-anchor')}>
+		return <div>
+			<div className={options.cx('node-anchor')}>
 				{this.props.connectDragSource(node)}
 			</div>
-
-			<div className={cx('list-container')}>
-				<NodeList wrapper={cx('list-container-inner')} list={this.props.data.contains} />
+			<div className={options.cx('list-container')}>
+				<NodeList
+					path={path.add(index)} options={options}
+					list={list[index].contains || []}
+					parentDragging={isDragging || parentDragging}
+					wrapper={options.cx('list-container-inner')} />
 			</div>
-
-			<Target visible={dragging} />
 		</div>;
 	}
 }
 
 @DropTarget('anyform-tree', {drop}, (connect, monitor) => ({
 	connectDropTarget: connect.dropTarget(),
-	isOver: monitor.isOver()
+	isOver: monitor.isOver(),
+	dragging: monitor.getItem()
 }))
 class Target extends Component {
 	render() {
-		const cx = classNames.bind(styles);
-		let { top, isOver, visible } = this.props;
+		let { parentDragging, options, isOver, dragging, list, index } = this.props;
 
-		let target = <div className={cx('target', {top, bottom: !top, visible})}>
-			{visible && isOver && <div className={cx('preview')}></div>}
+		let item = dragging && dragging.item;
+		if (parentDragging || item === list[index-1] || item === list[index]) {
+			dragging = false;
+		}
+
+		let target = <div className={options.cx('target', {dragging})}>
+			{dragging && isOver && <div className={options.cx('preview')}></div>}
 		</div>;
 
-		return <div className={cx('target-anchor')}>
+		return <div className={options.cx('target-anchor')}>
 			{this.props.connectDropTarget(target)}
 		</div>;
+	}
+}
+
+export class Path {
+	constructor(segments) {
+		this.segments = segments || [];
+	}
+	add(segment) {
+		return new Path(this.segments.concat([segment]));
 	}
 }
 
 @DragDropContext(HTML5Backend)
 export class Tree extends Component {
 	render() {
-		const cx = classNames.bind(styles);
-		const options = settings;
-		var list = testdata || this.props.nodes;
+		const options = { ...settings, cx: classNames.bind(styles) };
 
-		return <NodeList wrapper={cx('anyform-tree')} list={list} />
+		let list = testdata || this.props.nodes;
+
+		return <NodeList list={list} options={options} path={new Path()}
+	  	wrapper={options.cx('anyform-tree')} />
 	}
 }
