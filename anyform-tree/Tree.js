@@ -50,21 +50,21 @@ class Node extends Component {
 		const cx = classNames.bind(styles);
 		let { dragging } = this.props;
 
-		if (!this.props.data) return <Target visible={dragging} top={true} />;
+		if (!this.props.data) return <Target visible={dragging} />;
 
 		let node = <div className={cx('node')}>{this.props.data.title}</div>;
 
 		return <div className={cx('node-container')}>
-
-			<div className={cx('node-container-inner')}>
-				<Target visible={dragging} top={true} />
-				<Target visible={dragging} top={false} />
+			<Target visible={dragging} />
+			<div className={cx('node-anchor')}>
 				{this.props.connectDragSource(node)}
 			</div>
 
 			<div className={cx('list-container')}>
 				<NodeList wrapper={cx('list-container-inner')} list={this.props.data.contains} />
 			</div>
+
+			<Target visible={dragging} />
 		</div>;
 	}
 }
@@ -82,7 +82,9 @@ class Target extends Component {
 			{visible && isOver && <div className={cx('preview')}></div>}
 		</div>;
 
-		return this.props.connectDropTarget(target);
+		return <div className={cx('target-anchor')}>
+			{this.props.connectDropTarget(target)}
+		</div>;
 	}
 }
 
