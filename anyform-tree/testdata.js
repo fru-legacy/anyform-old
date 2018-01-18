@@ -20,10 +20,17 @@ export let testdata = [
 {
     id: "B",
     title: "B",
+    multi: [
+      { id: "BA1", title: "BA1" },
+      { id: "BA2", title: "BA2" }
+    ],
     contains: [
         {
         id: "B1",
         title: "B1",
+        multi: [
+          { id: "B1A1", title: "B1A1" }
+        ],
         },
         {
         id: "B2",

@@ -23,17 +23,19 @@ export class Tree extends Component {
 	}
 }*/
 
-const NodeList = ({ list, parentDragging, options, path, wrapper }) => {
+const NodeList = ({ list, parentDragging, options, path, wrapper, isFullWidth, isMultiNode }) => {
 
-	let context = { list, parentDragging, options, path };
-	let first = <Target {...context} index={0} />;
+	let context = { list, parentDragging, options, path, isFullWidth, isMultiNode };
+	let first   = <Target {...context} index={0} />;
+	let content = [];
 
-	let content = (node, i) => <div key={node.id}>
-		<Node   {...context} index={i} />
-		<Target {...context} index={i+1} />
-	</div>
+	for (var i = 0; i < list.length; i++) {
+		let key = list[i].id;
+		content.push(<Node   {...context} key={'nd' + key} index={i} />);
+		content.push(<Target {...context} key={'tg' + key} index={i+1} />);
+	}
 
-	return <div className={wrapper}>{first}{list && list.map(content)}</div>;
+	return <div className={wrapper}>{first}{content}</div>;
 }
 
 const getSourceItem = ({ path, list, index }) => ({item: list[index], path})
@@ -51,24 +53,36 @@ function drop(props, monitor) {
 class Node extends Component {
 	render() {
 		let { list, parentDragging, isDragging, options, index, path } = this.props;
-		let node = <div className={options.cx('node')}>{list[index].title}</div>;
+		let { isFullWidth, isMultiNode } = this.props;
 
 		// TODO groups:
 
+		let single = list[index];
+		let startMultiNode = !isMultiNode && single.multi && single.multi.length;
+		let node = !startMultiNode && options.node(options, single, isFullWidth);
+
+		if (isMultiNode) return this.props.connectDragSource(node);
+
 		return <div>
 			<div className={options.cx('node-anchor')}>
-				{this.props.connectDragSource(node)}
+				{ !startMultiNode && this.props.connectDragSource(node)}
+				{ startMultiNode  && <NodeList
+					path={path.add(index)} options={options}
+					isMultiNode={true} isFullWidth={single.multi.length === 1}
+					parentDragging={parentDragging}
+					list={single.multi} wrapper={options.cx('node-multi-container')} />}
 			</div>
 			<div className={options.cx('list-container')}>
 				<NodeList
-					path={path.add(index)} options={options}
-					list={list[index].contains || []}
+					path={path.add(index)} options={options} isFullWidth={true}
 					parentDragging={isDragging || parentDragging}
+					list={single.contains || []}
 					wrapper={options.cx('list-container-inner')} />
 			</div>
 		</div>;
 	}
 }
+
 
 @DropTarget('anyform-tree', {drop}, (connect, monitor) => ({
 	connectDropTarget: connect.dropTarget(),
@@ -106,7 +120,10 @@ export class Path {
 @DragDropContext(HTML5Backend)
 export class Tree extends Component {
 	render() {
-		const options = { ...settings, cx: classNames.bind(styles) };
+		let node = (options, node, isFullWidth) => {
+			return <div className={options.cx('node')}>{node.title}</div>;
+		};
+		const options = { ...settings, cx: classNames.bind(styles), node };
 
 		let list = testdata || this.props.nodes;
 

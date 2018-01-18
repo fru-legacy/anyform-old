@@ -47,53 +47,56 @@
         }
 
         .preview {
+          position: absolute;
           background-color: red;
           height: $vertical-spacing;
-          margin-top: $target-overlay;
+          left: 0;
+          right: 0;
+          top: $target-overlay;
         }
       }
     }
 
+    .node-multi-container {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 (-$vertical-spacing);
+      overflow: hidden;
+      .node {
+        flex-grow: 1;
+      }
+      .target-anchor {
+        width: $vertical-spacing;
+        .target {
+          z-index: 4;
+          width: 0;
+          &.dragging {
+            width: 2 * $target-overlay + $vertical-spacing;
+            height: auto;
+            top: 0;
+            left: -$target-overlay;
+            bottom: 0;
+
+            // Important that the targets become "slowly" visible to not abort the drag
+            -webkit-transition: width 500ms;
+            -moz-transition: width 500ms;
+            -ms-transition: width 500ms;
+            -o-transition: width 500ms;
+            transition: width 500ms;
+          }
+          .preview {
+            width: $vertical-spacing;
+            left: $target-overlay;
+            top: 0;
+            bottom: $vertical-spacing;
+            right: auto;
+            height: auto;
+          }
+        }
+      }
+    }
+
+    
+
   }
 }
-
-
-/*:global {
-
-    $vertical-spacing: 4px;
-    $target-overlay: 6px;
-
-    .anyform-tree {
-        .node {
-            border: 1px solid green;
-            margin-bottom: $vertical-spacing;
-        }
-        .contains {
-            margin-left: 20px;
-        }
-        .node-container {
-            position: relative;
-            .target {
-                height: 0;
-                overflow: hidden;
-                position: absolute;
-                width: 100%;
-
-                &.visible {
-                    background-color: rgba(1,1,1,0.15);
-                    bottom: -($target-overlay + $vertical-spacing);
-                    height: 2 * $target-overlay + $vertical-spacing;
-                    &.top {
-                        top: -($target-overlay + $vertical-spacing);
-                        bottom: auto;
-                    }
-                }
-                .preview {
-                    background-color: red;
-                    height: $vertical-spacing;
-                    margin-top: $target-overlay;
-                }
-            }
-        }
-    }
-}*/
