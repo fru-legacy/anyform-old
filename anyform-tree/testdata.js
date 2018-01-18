@@ -36,6 +36,9 @@ export let testdata = [
         id: "B2",
         title: "B2",
         },
+    ],
+    "contains-group1": [
+      { id: "B1A1", title: "B1A1" }
     ]
 },
 {

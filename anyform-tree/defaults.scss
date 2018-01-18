@@ -2,7 +2,7 @@
   .anyform-tree {
 
     $vertical-spacing: 4px;
-    $target-overlay: 12px;
+    $target-overlay: 10px;
 
     .node {
       border: 1px solid green;
@@ -14,7 +14,7 @@
     }
 
     .list-container {
-      margin-left: 20px;
+      margin-left: 18px;
       margin-top: -($vertical-spacing + $target-overlay);
       padding-top: ($vertical-spacing + $target-overlay);
 
@@ -96,7 +96,7 @@
       }
     }
 
-    
+
 
   }
 }
