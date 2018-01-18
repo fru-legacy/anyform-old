@@ -67,7 +67,9 @@ class Node extends Component {
 			</div>
 			<div className={options.cx('list-container')}>
 				{contains.map((group) => <div key={group.id}>
-					{group.id}
+					{group.id && <div className={options.cx('group-container')}>
+						{options.containsTitle(group.id)}
+					</div>}
 					<NodeList
 						path={path.add(index)} options={options} isFullWidth={true}
 						parentDragging={isDragging || parentDragging}
@@ -132,7 +134,10 @@ export class Tree extends Component {
 				}
         return result;
     };
-		const options = { ...settings, cx: classNames.bind(styles), node, containsNormalized };
+		let containsTitle = (id) => {
+			return "Group 1"
+		};
+		const options = { ...settings, cx: classNames.bind(styles), node, containsNormalized, containsTitle };
 
 		let list = testdata || this.props.nodes;
 
