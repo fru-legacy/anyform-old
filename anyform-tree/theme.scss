@@ -1,0 +1,56 @@
+:global {
+
+  $vertical-spacing: 4px;
+  $target-overlay: 10px;
+  $background: #dcdcdc;
+  $color-description: #707070;
+  $color-highlight: lighten(#079dc3, 6);
+  $color-selection: lighten(#079dc3, 50);
+  $color-highlight-shadow: darken(desaturate($color-highlight, 40), 10);
+  $color-highlight-action: lighten(desaturate($color-highlight, 30), 15);
+
+  @import "defaults";
+
+  .anyform-tree {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: $background;
+    padding: $vertical-spacing;
+    padding-bottom: 0;
+
+    .node, .group-container {
+      font-size: 10px;
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .node {
+      color: $color-description;
+      cursor: pointer;
+      box-shadow: 0 2px 2px 0 rgba($color-highlight-shadow,.14),
+                  0 3px 1px -2px rgba($color-highlight-shadow,.2),
+                  0 1px 5px 0 rgba($color-highlight-shadow,.12);
+      padding: 9px 8px;
+      border-radius: 4px;
+      background-color: white;
+
+      &.active {
+        background-color: $color-selection;
+      }
+    }
+
+    .group-container {
+      color: darken($color-description, 25);
+      padding: 5px 8px 2px;
+    }
+  }
+
+}

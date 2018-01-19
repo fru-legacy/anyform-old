@@ -7,7 +7,7 @@ import classNames from 'classnames/bind';
 import { testdata } from './testdata';
 
 import settings from './defaults';
-import styles from './defaults.scss';
+import styles from './theme.scss';
 
 // TODO styling defaults && theme
 // TODO path correct
@@ -119,7 +119,8 @@ export class Path {
 export class Tree extends Component {
 	render() {
 		let node = (options, node, isFullWidth) => {
-			return <div className={options.cx('node')}>{node.title}</div>;
+			let active = node.active;
+			return <div className={options.cx('node', {active})}>{node.title}</div>;
 		};
 		let containsNormalized = (node) => {
 				let result = [{id: '', value: node.contains}];

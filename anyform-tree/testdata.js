@@ -2,6 +2,7 @@ export let testdata = [
 {
     id: "A",
     title: "A",
+    active: true,
     contains: [
         {
         id: "A1",
