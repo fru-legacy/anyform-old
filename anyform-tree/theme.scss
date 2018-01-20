@@ -1,6 +1,6 @@
 :global {
 
-  $vertical-spacing: 4px;
+  $vertical-spacing: 5px;
   $target-overlay: 10px;
   $background: #dcdcdc;
   $color-description: #707070;
@@ -8,6 +8,7 @@
   $color-selection: lighten(#079dc3, 50);
   $color-highlight-shadow: darken(desaturate($color-highlight, 40), 10);
   $color-highlight-action: lighten(desaturate($color-highlight, 30), 15);
+  $color-group: darken($color-description, 25);
 
   @import "defaults";
 
@@ -32,13 +33,23 @@
       user-select: none;
     }
 
+    .handler {
+      color: $color-highlight;
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding-bottom: 5px;
+      letter-spacing: 0.8px;
+      padding-right: 6px;
+    }
+
     .node {
       color: $color-description;
       cursor: pointer;
       box-shadow: 0 2px 2px 0 rgba($color-highlight-shadow,.14),
                   0 3px 1px -2px rgba($color-highlight-shadow,.2),
                   0 1px 5px 0 rgba($color-highlight-shadow,.12);
-      padding: 9px 8px;
+      padding: 7px 8px;
       border-radius: 4px;
       background-color: white;
 
@@ -48,8 +59,9 @@
     }
 
     .group-container {
-      color: darken($color-description, 25);
-      padding: 5px 8px 2px;
+      color: $color-group;
+      font-size: 11px;
+      padding: 5px 4px 3px;
     }
   }
 

@@ -9,7 +9,6 @@ import { testdata } from './testdata';
 import settings from './defaults';
 import styles from './theme.scss';
 
-// TODO styling defaults && theme
 // TODO path correct
 // TODO update tree
 // TODO customization via options
@@ -120,7 +119,10 @@ export class Tree extends Component {
 	render() {
 		let node = (options, node, isFullWidth) => {
 			let active = node.active;
-			return <div className={options.cx('node', {active})}>{node.title}</div>;
+			return <div className={options.cx('node', {active})}>
+				<span className={options.cx('handler')}>::</span>
+				{node.title}
+			</div>;
 		};
 		let containsNormalized = (node) => {
 				let result = [{id: '', value: node.contains}];
