@@ -50,7 +50,9 @@ class Node extends Component {
 		let single = list[index];
 		let startMultiNode = !isMultiNode && single.multi && single.multi.length;
 		let node = !startMultiNode && options.node(options, single, isFullWidth);
+		path = path.add(index);
 
+		if (!startMultiNode) console.log(path.segments);
 		if (isMultiNode) return this.props.connectDragSource(node);
 
 		let contains = options.containsNormalized(single);
@@ -59,7 +61,7 @@ class Node extends Component {
 			<div className={options.cx('node-anchor')}>
 				{ !startMultiNode && this.props.connectDragSource(node)}
 				{ startMultiNode  && <NodeList
-					path={path.add(index)} options={options}
+					path={path.add('multi')} options={options}
 					isMultiNode={true} isFullWidth={single.multi.length === 1}
 					parentDragging={parentDragging}
 					list={single.multi} wrapper={options.cx('node-multi-container')} />}
@@ -67,10 +69,10 @@ class Node extends Component {
 			<div className={options.cx('list-container')}>
 				{contains.map((group) => <div key={group.id}>
 					{group.id && <div className={options.cx('group-container')}>
-						{options.containsTitle(group.id)}
+						{options.containsGroupTitle(group.id)}
 					</div>}
 					<NodeList
-						path={path.add(index)} options={options} isFullWidth={true}
+						path={path.add(group.path)} options={options} isFullWidth={true}
 						parentDragging={isDragging || parentDragging}
 						list={group.value || []}
 						wrapper={options.cx('list-container-inner')} />
@@ -124,23 +126,31 @@ export class Tree extends Component {
 				{node.title}
 			</div>;
 		};
+
+		let containsField = 'contains';
+		let containsGroupPrefix = 'contains-';
+		let containsGroupTitle = (id) => {
+			return "Group 1"
+		};
 		let containsNormalized = (node) => {
-				let result = [{id: '', value: node.contains}];
-				const prefix = 'contains-';
+				let results = [
+					{id: '', value: node.contains, path: 'contains'}
+				];
+
 				for(var key in node) {
+					const prefix = containsGroupPrefix;
 					if (key.indexOf(prefix) === 0) {
-						result.push({
+						results.push({
 							id: key.substring(prefix.length),
+							path: key,
 							value: node[key]
 						});
 					}
 				}
-        return result;
+        return results;
     };
-		let containsTitle = (id) => {
-			return "Group 1"
-		};
-		const options = { ...settings, cx: classNames.bind(styles), node, containsNormalized, containsTitle };
+
+		const options = { ...settings, cx: classNames.bind(styles), node, containsNormalized, containsGroupTitle };
 
 		let list = testdata || this.props.nodes;
 
