@@ -18,13 +18,13 @@ import styles from './theme.scss';
 const NodeList = ({ list, parentDragging, options, path, wrapper, isFullWidth, isMultiNode }) => {
 
 	let context = { list, parentDragging, options, path, isFullWidth, isMultiNode };
-	let first   = <Target {...context} index={0} />;
+	let first   = <Target {...context} index={0} path={path.add(0)} />;
 	let content = [];
 
 	for (var i = 0; i < list.length; i++) {
 		let key = list[i].id;
-		content.push(<Node   {...context} key={'nd' + key} index={i} />);
-		content.push(<Target {...context} key={'tg' + key} index={i+1} />);
+		content.push(<Node   {...context} key={'nd' + key} index={i} path={path.add(i)} />);
+		content.push(<Target {...context} key={'tg' + key} index={i+1} path={path.add(i+1)} />);
 	}
 
 	return <div className={wrapper}>{first}{content}</div>;
@@ -50,7 +50,6 @@ class Node extends Component {
 		let single = list[index];
 		let startMultiNode = !isMultiNode && single.multi && single.multi.length;
 		let node = !startMultiNode && options.node(options, single, isFullWidth);
-		path = path.add(index);
 
 		if (!startMultiNode) console.log(path.segments);
 		if (isMultiNode) return this.props.connectDragSource(node);
