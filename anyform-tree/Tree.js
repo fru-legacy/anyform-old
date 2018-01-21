@@ -9,7 +9,6 @@ import { testdata } from './testdata';
 import settings from './defaults';
 import styles from './theme.scss';
 
-// TODO path correct
 // TODO update tree
 // TODO customization via options
 // TODO cleanup
@@ -112,6 +111,15 @@ export class Path {
 	}
 	add(segment) {
 		return new Path(this.segments.concat([segment]));
+	}
+	detach(tree) {
+
+	}
+	insert(data, tree) {
+
+	}
+	recalculateAfterDetach(detached, options) {
+
 	}
 }
 
