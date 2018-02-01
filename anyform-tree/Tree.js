@@ -4,10 +4,9 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragSource, DropTarget } from 'react-dnd';
 
 import classNames from 'classnames/bind';
-import { testdata } from './testdata';
 
 import settings from './defaults';
-import styles from './theme.scss';
+import styles from './example.scss';
 
 // TODO update tree
 // TODO customization via options
@@ -32,9 +31,9 @@ const NodeList = ({ list, parentDragging, options, path, wrapper, isFullWidth, i
 const getSourceItem = ({ path, list, index }) => ({item: list[index], path})
 
 function drop(props, monitor) {
-	console.log(monitor.getItem());
-	console.log('moved to');
-	console.log({parent: props.parent, path: props.path, top: props.top});
+	var item = monitor.getItem();
+	var recalc = props.path.recalculateAfterDetach(item.path);
+	props.options.onDrop(item.path.segments, recalc.segments, item.item);
 }
 
 @DragSource('anyform-tree', {beginDrag: getSourceItem}, (connect, monitor) => ({
@@ -50,7 +49,6 @@ class Node extends Component {
 		let startMultiNode = !isMultiNode && single.multi && single.multi.length;
 		let node = !startMultiNode && options.node(options, single, isFullWidth);
 
-		if (!startMultiNode) console.log(path.segments);
 		if (isMultiNode) return this.props.connectDragSource(node);
 
 		let contains = options.containsNormalized(single);
@@ -112,15 +110,51 @@ export class Path {
 	add(segment) {
 		return new Path(this.segments.concat([segment]));
 	}
-	detach(tree) {
-
-	}
-	insert(data, tree) {
-
-	}
 	recalculateAfterDetach(detached, options) {
+		var path = this.segments.slice();
+		var last = detached.segments.length - 1;
 
+		for(var i = 0; i < last; i++) {
+			if (path[i] !== detached.segments[i]) return this;
+		}
+		if (path[last] < detached.segments[last]) return this;
+		path[last]--; 
+		return new Path(path);
 	}
+}
+
+function getPath(context, path) {
+	for(var i = 0; i < path.length; i++) {
+		context = context[path[i]];
+	}
+	return context;
+}
+
+function clone(context) {
+	return JSON.parse(JSON.stringify(context));
+}
+
+export function onDrop(options, from, to, node) {
+	var tree = clone(this.props.nodes);
+
+	var fromIndex = from.pop();
+	var fromParent = getPath(tree, from);
+
+	fromParent.splice(fromIndex, 1);
+
+	
+
+	var toIndex = to.pop();
+	var toName = to.pop();
+	var toParent = getPath(tree, to);
+	
+	if (typeof toName !== 'undefined') {
+		toParent[toName] = toParent[toName] || [];
+		toParent = toParent[toName];	
+	}
+	toParent.splice(toIndex, 0, node);
+
+	this.props.onChange(tree);
 }
 
 @DragDropContext(HTML5Backend)
@@ -140,28 +174,27 @@ export class Tree extends Component {
 			return "Group 1"
 		};
 		let containsNormalized = (node) => {
-				let results = [
-					{id: '', value: node.contains, path: 'contains'}
-				];
+			let results = [
+				{id: '', value: node.contains, path: 'contains'}
+			];
 
-				for(var key in node) {
-					const prefix = containsGroupPrefix;
-					if (key.indexOf(prefix) === 0) {
-						results.push({
-							id: key.substring(prefix.length),
-							path: key,
-							value: node[key]
-						});
-					}
+			for(var key in node) {
+				const prefix = containsGroupPrefix;
+				if (key.indexOf(prefix) === 0) {
+					results.push({
+						id: key.substring(prefix.length),
+						path: key,
+						value: node[key]
+					});
 				}
-        return results;
-    };
+			}
+        	return results;
+    	};
 
 		const options = { ...settings, cx: classNames.bind(styles), node, containsNormalized, containsGroupTitle };
+		options.onDrop = onDrop.bind(this, options);
 
-		let list = testdata || this.props.nodes;
-
-		return <NodeList list={list} options={options} path={new Path()}
+		return <NodeList list={this.props.nodes} options={options} path={new Path()}
 	  	wrapper={options.cx('anyform-tree')} />
 	}
 }
