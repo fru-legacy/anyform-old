@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DragDropContext } from 'react-dnd';
+import { DragDropContext, DropTargetMonitor } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragSource, DropTarget } from 'react-dnd';
 
@@ -7,48 +7,12 @@ import classNames from 'classnames/bind';
 
 import settings from './defaults';
 import styles from './example.scss';
-import { startsMultiRow } from './NodeList';
+import { startsMultiRow, NodeListMultiRow, NodeListChildGroups, NodeListRoot } from './NodeList';
 
 // TODO update tree
 // TODO customization via options
 // TODO cleanup
 // TODO release and document
-
-const NodeList = ({ wrapper, path, ...context }) => {
-
-	let content = [<Target {...context} index={0} path={path.add(0)} key={0} />];
-
-	for (var i = 0; i < context.list.length; i++) {
-		let key = context.list[i].id;
-		content.push(<Node   {...context} index={i}   path={path.add(i)}   key={'node_' + key} />);
-		content.push(<Target {...context} index={i+1} path={path.add(i+1)} key={i+1} />);
-	}
-
-	return <div className={wrapper}>{content}</div>;
-}
-
-const NodeListMultiRow = ({ row, path, ...context }) => {
-
-	let multiProp = 'multi';
-	context.wrapper = context.options.cx('node-multi-container');
-
-	context.path = path.add(multiProp);
-	context.list = row[multiProp];
-
-	return <NodeList {...context} isMultiNode={true} />
-}
-
-const NodeListChildGroups = ({groups, path, ...context}) => groups.map((group) => {
-
-	let titleClass = context.options.cx('group-container');
-	let title = group.title && <div className={titleClass}>{group.title}</div>
-
-	let list = <NodeList {...context} 
-		path={path.add(group.path)} list={group.value}
-		wrapper={context.options.cx('list-container-inner')} />
-
-	return <div key={group.id}>{title}{list}</div>
-})
 
 function drop(props, monitor) {
 	var item = monitor.getItem();
@@ -207,8 +171,10 @@ export class Tree extends Component {
 		options.multiProp = 'multi';
 		options.onDrop = onDrop.bind(this, options);
 		options.beginDrag = ({ options, path, list, index }) => ({item: list[index], path})
+		options.Target = Target;
+		options.Node = Node;
+		options.rootPath = new Path();
 
-		return <NodeList list={this.props.nodes} options={options} path={new Path()}
-	  	wrapper={options.cx('anyform-tree')} />
+		return <NodeListRoot list={this.props.nodes} options={options} />
 	}
 }

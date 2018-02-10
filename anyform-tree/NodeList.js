@@ -3,6 +3,7 @@ import React from 'react';
 const NodeList = ({ wrapper, path, ...context }) => {
 
 	let { Target, Node } = context.options;
+	console.log(Target, Node);
 
 	let content = [<Target {...context} index={0} path={path.add(0)} key={0} />];
 
@@ -13,6 +14,14 @@ const NodeList = ({ wrapper, path, ...context }) => {
 	}
 
 	return <div className={wrapper}>{content}</div>;
+}
+
+
+// Helper to decide if single or multi row is used
+
+export const startsMultiRow = (node, options) => {
+	let multiProp = options.multiProp;
+	return node[multiProp] && node[multiProp].length;
 }
 
 
@@ -30,14 +39,6 @@ export const NodeListMultiRow = ({ row, path, ...context }) => {
 }
 
 
-// Helper to decide if single or multi row is used
-
-export const startsMultiRow = (node, options) => {
-	let multiProp = options.multiProp;
-	return node[multiProp] && node[multiProp].length;
-}
-
-
 // Children grouped by property, that may have a title
 
 export const NodeListChildGroups = ({ groups, path, ...context }) => groups.map((group) => {
@@ -51,3 +52,9 @@ export const NodeListChildGroups = ({ groups, path, ...context }) => groups.map(
 
 	return <div key={group.id}>{title}{list}</div>
 })
+
+
+// Initial simple root list
+
+export const NodeListRoot = (props) => <NodeList {...props} path={props.options.rootPath} 
+	wrapper={props.options.cx('anyform-tree')} />;
