@@ -21,14 +21,12 @@ const NodeList = ({ list, parentDragging, options, path, wrapper, isFullWidth, i
 
 	for (var i = 0; i < list.length; i++) {
 		let key = list[i].id;
-		content.push(<Node   {...context} key={'nd' + key} index={i} path={path.add(i)} />);
-		content.push(<Target {...context} key={'tg' + key} index={i+1} path={path.add(i+1)} />);
+		content.push(<Node   {...context} key={'node_'   + key} index={i}   path={path.add(i)} />);
+		content.push(<Target {...context} key={'target_' + key} index={i+1} path={path.add(i+1)} />);
 	}
 
 	return <div className={wrapper}>{first}{content}</div>;
 }
-
-const getSourceItem = ({ path, list, index }) => ({item: list[index], path})
 
 function drop(props, monitor) {
 	var item = monitor.getItem();
@@ -36,13 +34,15 @@ function drop(props, monitor) {
 	props.options.onDrop(item.path.segments, recalc.segments, item.item);
 }
 
-@DragSource('anyform-tree', {beginDrag: getSourceItem}, (connect, monitor) => ({
+@DragSource('anyform-tree', {beginDrag: (p) => p.options.beginDrag(p)}, (connect, monitor) => ({
 	connectDragSource: connect.dragSource(),
 	isDragging: monitor.isDragging()
 }))
 class Node extends Component {
 	render() {
 		let { list, parentDragging, isDragging, options, index, path } = this.props;
+
+		
 		let { isFullWidth, isMultiNode } = this.props;
 
 		let single = list[index];
@@ -191,6 +191,7 @@ export class Tree extends Component {
 
 		const options = { ...settings, cx: classNames.bind(styles), node, containsNormalized, containsGroupTitle };
 		options.onDrop = onDrop.bind(this, options);
+		options.beginDrag = ({ options, path, list, index }) => ({item: list[index], path})
 
 		return <NodeList list={this.props.nodes} options={options} path={new Path()}
 	  	wrapper={options.cx('anyform-tree')} />
