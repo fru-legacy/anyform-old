@@ -13,20 +13,41 @@ import styles from './example.scss';
 // TODO cleanup
 // TODO release and document
 
-const NodeList = ({ list, parentDragging, options, path, wrapper, isFullWidth, isMultiNode }) => {
+const NodeList = ({ wrapper, path, ...context }) => {
 
-	let context = { list, parentDragging, options, path, isFullWidth, isMultiNode };
-	let first   = <Target {...context} index={0} path={path.add(0)} />;
-	let content = [];
+	let content = [<Target {...context} index={0} path={path.add(0)} key={0} />];
 
-	for (var i = 0; i < list.length; i++) {
-		let key = list[i].id;
-		content.push(<Node   {...context} key={'node_'   + key} index={i}   path={path.add(i)} />);
-		content.push(<Target {...context} key={'target_' + key} index={i+1} path={path.add(i+1)} />);
+	for (var i = 0; i < context.list.length; i++) {
+		let key = context.list[i].id;
+		content.push(<Node   {...context} index={i}   path={path.add(i)}   key={'node_' + key} />);
+		content.push(<Target {...context} index={i+1} path={path.add(i+1)} key={i+1} />);
 	}
 
-	return <div className={wrapper}>{first}{content}</div>;
+	return <div className={wrapper}>{content}</div>;
 }
+
+const HorrizontalNodeListMultiRow = ({ row, path, ...context }) => {
+
+	let multiProp = 'multi';
+	context.wrapper = context.options.cx('node-multi-container');
+
+	context.path = path.add(multiProp);
+	context.list = row[multiProp];
+
+	return <NodeList {...context} isMultiNode={true} />
+}
+
+const VerticalNodeListChildGroups = ({groups, path, ...context}) => groups.map((group) => {
+
+	let titleClass = context.options.cx('group-container');
+	let title = group.title && <div className={titleClass}>{group.title}</div>
+
+	let list = <NodeList {...context} 
+		path={path.add(group.path)} list={group.value}
+		wrapper={context.options.cx('list-container-inner')} />
+
+	return <div key={group.id}>{title}{list}</div>
+})
 
 function drop(props, monitor) {
 	var item = monitor.getItem();
@@ -40,39 +61,24 @@ function drop(props, monitor) {
 }))
 class Node extends Component {
 	render() {
-		let { list, parentDragging, isDragging, options, index, path } = this.props;
-
-		
-		let { isFullWidth, isMultiNode } = this.props;
+		let { list, parentDragging, isDragging, options, index, path, isMultiNode } = this.props;
+		//let isFullWidth = list.length === 1;
 
 		let single = list[index];
 		let startMultiNode = !isMultiNode && single.multi && single.multi.length;
-		let node = !startMultiNode && options.node(options, single, isFullWidth);
+		let node = !startMultiNode && options.node(options, single);
 
 		if (isMultiNode) return this.props.connectDragSource(node);
 
-		let contains = options.containsNormalized(single);
+		let groups = options.containsNormalized(single);
 
 		return <div>
 			<div className={options.cx('node-anchor')}>
 				{ !startMultiNode && this.props.connectDragSource(node)}
-				{ startMultiNode  && <NodeList
-					path={path.add('multi')} options={options}
-					isMultiNode={true} isFullWidth={single.multi.length === 1}
-					parentDragging={parentDragging}
-					list={single.multi} wrapper={options.cx('node-multi-container')} />}
+				{ startMultiNode  && <HorrizontalNodeListMultiRow {...this.props} row={single} />}
 			</div>
 			<div className={options.cx('list-container')}>
-				{contains.map((group) => <div key={group.id}>
-					{group.id && <div className={options.cx('group-container')}>
-						{options.containsGroupTitle(group.id)}
-					</div>}
-					<NodeList
-						path={path.add(group.path)} options={options} isFullWidth={true}
-						parentDragging={isDragging || parentDragging}
-						list={group.value || []}
-						wrapper={options.cx('list-container-inner')} />
-				</div>)}
+				<VerticalNodeListChildGroups {...this.props} groups={groups} parentDragging={isDragging || parentDragging} />
 			</div>
 		</div>;
 	}
@@ -158,7 +164,7 @@ export function onDrop(options, from, to, node) {
 @DragDropContext(HTML5Backend)
 export class Tree extends Component {
 	render() {
-		let node = (options, node, isFullWidth) => {
+		let node = (options, node) => {
 			let active = node.active;
 			return <div className={options.cx('node', {active})}>
 				<span className={options.cx('handler')}>::</span>
@@ -173,7 +179,7 @@ export class Tree extends Component {
 		};
 		let containsNormalized = (node) => {
 			let results = [
-				{id: '', value: node.contains, path: 'contains'}
+				{id: '', value: node.contains || [], path: 'contains', title: ''}
 			];
 
 			for(var key in node) {
@@ -182,7 +188,7 @@ export class Tree extends Component {
 					results.push({
 						id: key.substring(prefix.length),
 						path: key,
-						value: node[key]
+						value: node[key] || []
 					});
 				}
 			}
