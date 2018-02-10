@@ -1,65 +1,53 @@
-import React, { Component } from 'react';
-import { DragSource } from 'react-dnd';
+import React from 'react';
 
-import { NodeTarget } from './NodeTarget';
+const NodeList = ({ wrapper, path, ...context }) => {
 
-const getSourceItem = (props) => ({item: props.current, path: props.path})
+	let { Target, Node } = context.options;
 
-@DragSource('anyform-tree', {beginDrag: getSourceItem}, (connect, monitor) => ({
-	connectDragSource: connect.dragSource(),
-	isDragging: monitor.isDragging(),
-	dragging: monitor.getItem()
-}))
-class NodeContainer extends Component {
+	let content = [<Target {...context} index={0} path={path.add(0)} key={0} />];
 
-	renderChildGroup = ({id, value}) => {
-		let { current, options, isDragging, isDraggingParent, cx, zIndex, key } = this.props;
-
-		let label = options.containsLabel(id);
-		let path  = options.buildPath(this.props.path, id);
-		let props = {path, options, cx, parent: current};
-
-		return <div className={cx('group')} key={id + key}>
-			<div className={cx('group-inner')}>
-				{label && <div className={cx('group-label')}>{label}</div>}
-				<NodeList list={value} {...props}
-					isDragging={isDragging || isDraggingParent}/>
-			</div>
-		</div>;
+	for (var i = 0; i < context.list.length; i++) {
+		let key = context.list[i].id;
+		content.push(<Node   {...context} index={i}   path={path.add(i)}   key={'node_' + key} />);
+		content.push(<Target {...context} index={i+1} path={path.add(i+1)} key={i+1} />);
 	}
 
-	render() {
-		let { options, current, index, isDragging, cx, zIndex, parent } = this.props;
-
-		let node = current && <div className={cx('node')}>{options.node(current, index)}</div>;
-
-		return <div className={cx('node-container')} style={{zIndex}}>
-			{current && this.props.connectDragSource(node)}
-			{current && <div className={cx('contains')} style={{zIndex: 2}}>
-				{options.containsNormalized(current).map(this.renderChildGroup)}
-			</div>}
-			<NodeTarget {...this.props} />
-		</div>;
-	}
+	return <div className={wrapper}>{content}</div>;
 }
 
-export const NodeList = ({list, isDragging, path, options, cx, zIndex, parent}) => {
-	var original = list || [];
-	if (!list || !list.length) list = [null];
 
-	return <div className={cx('list')}>{
-		list.map((_, i) => <NodeContainer
-			current  = {list[i]}
-			previous = {list[i - 1]}
-			key      = {options.id(list[i])}
-			index    = {i}
-			isLast   = {list.length === i + 1 && original.length > 0}
-			options  = {options}
-			path     = {options.buildPath(path, i)}
-			cx       = {cx}
-			zIndex   = {list.length - i}
-			parent   = {parent}
-			isDraggingParent = {isDragging}
-		/>)
-	}</div>;
-};
+// Horrizontal collection of nodes in a single row
+
+export const NodeListMultiRow = ({ row, path, ...context }) => {
+
+	let multiProp = context.options.multiProp;
+	context.wrapper = context.options.cx('node-multi-container');
+
+	context.path = path.add(multiProp);
+	context.list = row[multiProp];
+
+	return <NodeList {...context} isMultiNode={true} />
+}
+
+
+// Helper to decide if single or multi row is used
+
+export const startsMultiRow = (node, options) => {
+	let multiProp = options.multiProp;
+	return node[multiProp] && node[multiProp].length;
+}
+
+
+// Children grouped by property, that may have a title
+
+export const NodeListChildGroups = ({ groups, path, ...context }) => groups.map((group) => {
+
+	let titleClass = context.options.cx('group-container');
+	let title = group.title && <div className={titleClass}>{group.title}</div>
+
+	let list = <NodeList {...context} 
+		path={path.add(group.path)} isMultiNode={false} list={group.value}
+		wrapper={context.options.cx('list-container-inner')} />
+
+	return <div key={group.id}>{title}{list}</div>
+})

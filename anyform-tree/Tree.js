@@ -7,6 +7,7 @@ import classNames from 'classnames/bind';
 
 import settings from './defaults';
 import styles from './example.scss';
+import { startsMultiRow } from './NodeList';
 
 // TODO update tree
 // TODO customization via options
@@ -26,7 +27,7 @@ const NodeList = ({ wrapper, path, ...context }) => {
 	return <div className={wrapper}>{content}</div>;
 }
 
-const HorrizontalNodeListMultiRow = ({ row, path, ...context }) => {
+const NodeListMultiRow = ({ row, path, ...context }) => {
 
 	let multiProp = 'multi';
 	context.wrapper = context.options.cx('node-multi-container');
@@ -37,7 +38,7 @@ const HorrizontalNodeListMultiRow = ({ row, path, ...context }) => {
 	return <NodeList {...context} isMultiNode={true} />
 }
 
-const VerticalNodeListChildGroups = ({groups, path, ...context}) => groups.map((group) => {
+const NodeListChildGroups = ({groups, path, ...context}) => groups.map((group) => {
 
 	let titleClass = context.options.cx('group-container');
 	let title = group.title && <div className={titleClass}>{group.title}</div>
@@ -61,24 +62,26 @@ function drop(props, monitor) {
 }))
 class Node extends Component {
 	render() {
+		let context = { list } = this.props;
+
 		let { list, parentDragging, isDragging, options, index, path, isMultiNode } = this.props;
 		//let isFullWidth = list.length === 1;
 
-		let single = list[index];
-		let startMultiNode = !isMultiNode && single.multi && single.multi.length;
-		let node = !startMultiNode && options.node(options, single);
+		let current = list[index];
+		
+		if (isMultiNode) {
+			return this.props.connectDragSource(options.node(current));
+		}
 
-		if (isMultiNode) return this.props.connectDragSource(node);
-
-		let groups = options.containsNormalized(single);
+		let groups = options.containsNormalized(current);
+		let row = startsMultiRow(current, options) 
+			? <NodeListMultiRow {...context} row={current} />
+			: this.props.connectDragSource(options.node(current));
 
 		return <div>
-			<div className={options.cx('node-anchor')}>
-				{ !startMultiNode && this.props.connectDragSource(node)}
-				{ startMultiNode  && <HorrizontalNodeListMultiRow {...this.props} row={single} />}
-			</div>
+			<div className={options.cx('node-anchor')}>{row}</div>
 			<div className={options.cx('list-container')}>
-				<VerticalNodeListChildGroups {...this.props} groups={groups} parentDragging={isDragging || parentDragging} />
+				<NodeListChildGroups {...context} groups={groups} parentDragging={isDragging || parentDragging} />
 			</div>
 		</div>;
 	}
@@ -164,10 +167,10 @@ export function onDrop(options, from, to, node) {
 @DragDropContext(HTML5Backend)
 export class Tree extends Component {
 	render() {
-		let node = (options, node) => {
+		let node = function (node) {
 			let active = node.active;
-			return <div className={options.cx('node', {active})}>
-				<span className={options.cx('handler')}>::</span>
+			return <div className={this.cx('node', {active})}>
+				<span className={this.cx('handler')}>::</span>
 				{node.title}
 			</div>;
 		};
@@ -175,27 +178,33 @@ export class Tree extends Component {
 		let containsField = 'contains';
 		let containsGroupPrefix = 'contains-';
 		let containsGroupTitle = (id) => {
-			return "Group 1"
+			if (id) return "Group 1"
 		};
-		let containsNormalized = (node) => {
-			let results = [
-				{id: '', value: node.contains || [], path: 'contains', title: ''}
-			];
+		let containsId = (key) => {
+			let prefix = containsField + '-'
+			if (key === containsField) return '';
+			if (key.indexOf(prefix) === 0) {
+				return key.substring(prefix.length);
+			}
+			return false;
+		}
 
+
+		let containsNormalized = (node) => {
+			let results = [];
 			for(var key in node) {
-				const prefix = containsGroupPrefix;
-				if (key.indexOf(prefix) === 0) {
+				let id = containsId(key);
+				if (id !== false) {
 					results.push({
-						id: key.substring(prefix.length),
-						path: key,
-						value: node[key] || []
-					});
+						id, path: key, value: node[key] || [], title: containsGroupTitle(id)
+					})
 				}
 			}
         	return results;
     	};
 
 		const options = { ...settings, cx: classNames.bind(styles), node, containsNormalized, containsGroupTitle };
+		options.multiProp = 'multi';
 		options.onDrop = onDrop.bind(this, options);
 		options.beginDrag = ({ options, path, list, index }) => ({item: list[index], path})
 
