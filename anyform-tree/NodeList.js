@@ -3,7 +3,6 @@ import React from 'react';
 const NodeList = ({ wrapper, path, ...context }) => {
 
 	let { Target, Node } = context.options;
-	console.log(Target, Node);
 
 	let content = [<Target {...context} index={0} path={path.add(0)} key={0} />];
 
@@ -57,4 +56,4 @@ export const NodeListChildGroups = ({ groups, path, ...context }) => groups.map(
 // Initial simple root list
 
 export const NodeListRoot = (props) => <NodeList {...props} path={props.options.rootPath} 
-	wrapper={props.options.cx('anyform-tree')} />;
+	tree={props.list} wrapper={props.options.cx('anyform-tree')} />;

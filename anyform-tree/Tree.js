@@ -14,21 +14,14 @@ import { startsMultiRow, NodeListMultiRow, NodeListChildGroups, NodeListRoot } f
 // TODO cleanup
 // TODO release and document
 
-function drop(props, monitor) {
-	var item = monitor.getItem();
-	var recalc = props.path.recalculateAfterDetach(item.path);
-	props.options.onDrop(item.path.segments, recalc.segments, item.item);
-}
-
 @DragSource('anyform-tree', {beginDrag: (p) => p.options.beginDrag(p)}, (connect, monitor) => ({
 	connectDragSource: connect.dragSource(),
 	isDragging: monitor.isDragging()
 }))
 class Node extends Component {
 	render() {
-		let context = { list } = this.props;
-
-		let { list, parentDragging, isDragging, options, index, path, isMultiNode } = this.props;
+		let context = this.props; // TODO filter
+		let { list, index, isMultiNode, parentDragging, isDragging, options } = this.props;
 		//let isFullWidth = list.length === 1;
 
 		let current = list[index];
@@ -51,6 +44,9 @@ class Node extends Component {
 	}
 }
 
+function drop(props, monitor) {
+	props.options.onDropUnnormalized(props.tree, props.path, props.options, monitor.getItem());
+}
 
 @DropTarget('anyform-tree', {drop}, (connect, monitor) => ({
 	connectDropTarget: connect.dropTarget(),
@@ -107,8 +103,14 @@ function clone(context) {
 	return JSON.parse(JSON.stringify(context));
 }
 
-export function onDrop(options, from, to, node) {
-	var tree = clone(this.props.nodes);
+function onDropUnnormalized(tree, path, options, item) {
+	var recalc = path.recalculateAfterDetach(item.path);
+	options.onDrop(tree, item.path.segments, recalc.segments, options, item.item);
+}
+
+// root
+function onDrop(tree, from, to, options, node) {
+	tree = clone(tree);
 
 	var fromIndex = from.pop();
 	var fromParent = getPath(tree, from);
@@ -125,7 +127,7 @@ export function onDrop(options, from, to, node) {
 	}
 	toParent.splice(toIndex, 0, node);
 
-	this.props.onChange(tree);
+	options.onChange(tree);
 }
 
 @DragDropContext(HTML5Backend)
@@ -169,11 +171,13 @@ export class Tree extends Component {
 
 		const options = { ...settings, cx: classNames.bind(styles), node, containsNormalized, containsGroupTitle };
 		options.multiProp = 'multi';
-		options.onDrop = onDrop.bind(this, options);
+		options.onDropUnnormalized = onDropUnnormalized;
+		options.onDrop = onDrop;
 		options.beginDrag = ({ options, path, list, index }) => ({item: list[index], path})
 		options.Target = Target;
 		options.Node = Node;
 		options.rootPath = new Path();
+		options.onChange = this.props.onChange;
 
 		return <NodeListRoot list={this.props.nodes} options={options} />
 	}
