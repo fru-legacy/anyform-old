@@ -17,7 +17,8 @@ export class Editor extends Component {
 	render() {
         return <div className="fg-example">
             <div className="left-context-switch">
-                <div className="icon"></div>
+                <div className="icon sort-list active"></div>
+                <div className="icon add-component"></div>
             </div>
             <div className="middle-form-editor">
                 <div className="tools">

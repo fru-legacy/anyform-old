@@ -55,12 +55,23 @@ $left-context-switch-width: 60px;
   bottom: 0;
   background-color: #454849;
   .icon {
-    color: #B3B3B3;
-    &.active {
-      color: #FAFAFA;
+    width: 30px;
+    height: 25px;
+    padding: 22px 14px;
+    padding-bottom: 0;
+    opacity: 0.6;
+    &.active, &:hover {
+      cursor: pointer;
+      opacity: 1;
     }
   }
-  
+  .icon.sort-list {
+    background: url(../docs/thenoun-sort-list-bernar-novalyi.png) bottom center no-repeat;
+  }
+  .icon.add-component {
+    margin-top: -2px;
+    background: url(../docs/thenoun-add-component.png) bottom center no-repeat;
+  }
 }
 
 :global {

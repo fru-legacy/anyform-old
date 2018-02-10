@@ -142,8 +142,6 @@ export function onDrop(options, from, to, node) {
 
 	fromParent.splice(fromIndex, 1);
 
-	
-
 	var toIndex = to.pop();
 	var toName = to.pop();
 	var toParent = getPath(tree, to);

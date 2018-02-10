@@ -84,6 +84,10 @@ const config = {
       {
         test: /\.yaml$/,
         loaders: ['json-loader', 'yaml-loader'],
+      },
+      {
+        test: /\.png$/,
+        loader: 'url-loader',
       }
     ]
   },
